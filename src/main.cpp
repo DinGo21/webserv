@@ -6,26 +6,47 @@
 /*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/18 15:08:41 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/21 14:47:40 by diego            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 #include "Server.hpp"
 
-void	parse_args(Server &server, std::vector<std::string> &args)
+int		server_config_set(Server &server, std::vector<std::string> &args, size_t i)
 {
-	size_t		i = 0;
-	size_t		j = 0;
-	std::string	arg;
+	size_t	c = 0;
+	size_t	j = 0;
 
-	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++)
+	if (!args[i].compare(0, 7, "listen"))
 	{
-		
+		if (!args[i + 1].compare(0, 2, "{") || !args[i + 1].compare(0, 2, "}") || !args[i + 1].compare(0, 2, ";"))
+			exit(EXIT_FAILURE);
+		while (args[i][j + 1] != '\0')
+		{
+			if (!isdigit(args[i][j++]))
+				exit(EXIT_FAILURE);
+		}
 	}
 }
 
-std::vector<std::string>	get_config(std::ifstream &config)
+void	server_config_parse(Server &server, std::vector<std::string> &args)
+{
+	size_t		i = 0;
+	uint		f = 0;
+
+	while (i < args.size())
+	{
+		if (!args[i].compare("server") && !args[i].compare("{") && f != 1)
+			f = 1;
+		if (!args[i].compare("}") && f != 0)
+			f = 0;
+		if (f)	
+			i += server_config_set(server, args, i);
+	}
+}
+
+std::vector<std::string>	server_config_get(std::ifstream &config)
 {
 	size_t						i = 0;
 	size_t						j = 0;
@@ -40,6 +61,7 @@ std::vector<std::string>	get_config(std::ifstream &config)
 	}
 	while (raw[i] != '\0')
 	{
+		//TODO: handle comments
 		while (strchr(" \t\n", raw[i]) && raw[i] != '\0')
 			i++;
 		if (raw[i] == '\0')
@@ -69,7 +91,7 @@ int	main(int argc, char *argv[])
 
 	if (argc != 2)
 	{
-		std::cerr << "Server requires configuration file." << std::endl;
+		std::cerr << "Server requires configuration file" << std::endl;
 		return 1;
 	}
 	config.open(argv[1]);
@@ -78,8 +100,8 @@ int	main(int argc, char *argv[])
 		std::cerr << "Unable to open file: " << argv[1] << std::endl;
 		return 1;
 	}
-	args = get_config(config);
-	parse_args(server, args);
+	args = server_config_get(config);
+	server_config_parse(server, args);
 	config.close();
 	return 0;
 }

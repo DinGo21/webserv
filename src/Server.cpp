@@ -6,12 +6,13 @@
 /*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2024/10/18 14:15:19 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/21 13:55:54 by diego            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server() {}
+Server::Server(): _port(0), _host(0), _maxSize(0) {}
 
 Server::~Server() {}
+

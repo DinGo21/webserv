@@ -6,28 +6,71 @@
 /*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/21 14:47:40 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/22 15:23:25 by diego            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
-#include "Server.hpp"
 
-int		server_config_set(Server &server, std::vector<std::string> &args, size_t i)
+uint	server_config_set(Server &server, std::vector<std::string> &args, size_t i)
 {
-	size_t	c = 0;
-	size_t	j = 0;
+	uint	j = 0;
 
 	if (!args[i].compare(0, 7, "listen"))
 	{
-		if (!args[i + 1].compare(0, 2, "{") || !args[i + 1].compare(0, 2, "}") || !args[i + 1].compare(0, 2, ";"))
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
 			exit(EXIT_FAILURE);
-		while (args[i][j + 1] != '\0')
+		while (args[i + 1][j] != '\0')
 		{
 			if (!isdigit(args[i][j++]))
 				exit(EXIT_FAILURE);
 		}
+		server.set_port(atoi(args[i + 1].c_str()));
+		return 1;
 	}
+	if (!args[i].compare(0, 6, "host"))
+	{
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
+			exit(EXIT_FAILURE);
+		server.set_host(args[i + 1]);
+		return 1;
+	}
+	if (!args[i].compare(0, 12, "server_name"))
+	{
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
+			exit(EXIT_FAILURE);
+		server.set_serverName(args[i + 1]);
+		return 1;
+	}
+	if (!args[i].compare(0, 11, "error_page"))
+	{
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
+			exit(EXIT_FAILURE);
+		if (args[i + 1].compare(0, 4, "404") || !strchr(";{}", args[i + 2][0]))
+			exit(EXIT_FAILURE);
+		server.set_errorPage(args[i + 2]);
+		return 2;
+	}
+	if (!args[i].compare(0, 21, "client_max_body_size"))
+	{
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
+			exit(EXIT_FAILURE);
+		while (args[i + 1][j] != '\0')
+		{
+			if (!isdigit(args[i][j++]))
+				exit(EXIT_FAILURE);
+		}
+		server.set_maxSize(atoi(args[i + 1].c_str()));
+		return 1;
+	}
+	if (!args[i + 1].compare(0, 5, "root"))
+	{
+		if (i + 1 < args.size() && !strchr(";{}", args[i + 1][0]))
+			exit(EXIT_FAILURE);
+		server.set_root(args[i + 1]);
+		return 1;
+	}
+	return 0;
 }
 
 void	server_config_parse(Server &server, std::vector<std::string> &args)
@@ -43,9 +86,11 @@ void	server_config_parse(Server &server, std::vector<std::string> &args)
 			f = 0;
 		if (f)	
 			i += server_config_set(server, args, i);
+		i++;
 	}
 }
 
+//TODO: handle comments
 std::vector<std::string>	server_config_get(std::ifstream &config)
 {
 	size_t						i = 0;
@@ -61,7 +106,6 @@ std::vector<std::string>	server_config_get(std::ifstream &config)
 	}
 	while (raw[i] != '\0')
 	{
-		//TODO: handle comments
 		while (strchr(" \t\n", raw[i]) && raw[i] != '\0')
 			i++;
 		if (raw[i] == '\0')

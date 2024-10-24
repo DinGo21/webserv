@@ -6,11 +6,11 @@
 /*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2024/10/22 12:22:06 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/23 10:01:56 by diego            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "classes/Server.hpp"
 
 Server::Server(): _port(0), _maxSize(0) {}
 
@@ -36,7 +36,7 @@ void	Server::set_host(const std::string &host)
     this->_host = host;
 }
 
-size_t	Server::set_maxSize() const
+size_t	Server::get_maxSize() const
 {
     return this->_maxSize;
 }
@@ -74,4 +74,15 @@ std::string   Server::get_root() const
 void	Server::set_root(const std::string &root)
 {
     this->_root = root;
+}
+
+std::ostream    &operator<<(std::ostream &o, const Server &rhs)
+{
+    o << "port: " << rhs.get_port() << '\n';
+    o << "host: " << rhs.get_host() << '\n';
+    o << "maxSize: " << rhs.get_maxSize() << '\n';
+    o << "serverName: " << rhs.get_serverName() << '\n';
+    o << "errorPage: " << rhs.get_errorPage() << '\n';
+    o << "root: " << rhs.get_root() << std::endl;
+    return o;
 }

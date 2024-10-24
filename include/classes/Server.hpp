@@ -6,7 +6,7 @@
 /*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/22 12:22:52 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/23 08:16:09 by diego            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ public:
 
 	uint		get_port() const;
 	void		set_port(const uint &port);
-	size_t		set_maxSize() const;
+	size_t		get_maxSize() const;
 	void		set_maxSize(const size_t &maxSize);
 	std::string	get_host() const;
 	void		set_host(const std::string &host);
@@ -45,5 +45,7 @@ public:
 	std::string	get_root() const;
 	void		set_root(const std::string &root);
 };
+
+std::ostream	&operator<<(std::ostream &o, const Server &rhs);
 
 #endif

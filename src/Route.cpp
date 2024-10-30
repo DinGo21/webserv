@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Route.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/30 11:31:46 by disantam         ###   ########.fr       */
+/*   Created: 2024/10/28 17:44:49 by diego             #+#    #+#             */
+/*   Updated: 2024/10/30 11:28:45 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "webserv.hpp"
+#include "classes/Route.hpp"
 
-int	main(int argc, char *argv[])
+Route::Route(): _id(0), _autoindex(0) {}
+
+Route::Route(const uint id, const std::string &modifier) : _id(id), _modifier(modifier)
 {
-	Server						server;
-	std::ifstream				config;
-	std::vector<std::string>	args;
 
-	if (argc != 2)
-	{
-		std::cerr << "Server requires configuration file" << std::endl;
-		return 1;
-	}
-	server_config(server, argv[1]);
-	return 0;
 }
+
+Route::~Route() {}

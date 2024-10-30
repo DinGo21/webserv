@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/23 08:16:09 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/30 11:28:26 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,19 @@
 # include <string>
 # include <vector>
 # include <cstdlib>
+# include "Route.hpp"
 
 class Server
 {
 private:
-	uint		_port;
-	size_t		_maxSize;
-	std::string	_host;
-	std::string	_serverName;
-	std::string	_errorPage;
-	std::string	_root;
+	std::vector<Route>		_routes;
+	uint					_routesCount;
+	uint					_port;
+	size_t					_maxSize;
+	std::string				_host;
+	std::string				_serverName;
+	std::string				_errorPage;
+	std::string				_root;
 
 public:
 	Server();

@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Route.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/30 11:31:46 by disantam         ###   ########.fr       */
+/*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
+/*   Updated: 2024/10/30 11:28:30 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "webserv.hpp"
+#ifndef __ROUTE_H__
+# define __ROUTE_H__
 
-int	main(int argc, char *argv[])
+# include <iostream>
+# include <string>
+# include <vector>
+# include <cstdlib>
+
+class Route
 {
-	Server						server;
-	std::ifstream				config;
-	std::vector<std::string>	args;
+private:
+	const uint			_id;
+	const std::string	_modifier;
+	std::string			_root;
+	std::string			_index;
+	std::string			_return;
+	std::string 		_methods[2];
+	bool				_autoindex;
 
-	if (argc != 2)
-	{
-		std::cerr << "Server requires configuration file" << std::endl;
-		return 1;
-	}
-	server_config(server, argv[1]);
-	return 0;
-}
+public:
+	Route();
+	Route(const uint id, const std::string &modifier);
+	~Route();
+	
+};
+
+#endif

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: diego <diego@student.42.fr>                +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2024/10/23 10:01:56 by diego            ###   ########.fr       */
+/*   Updated: 2024/10/30 11:28:47 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Server.hpp"
 
-Server::Server(): _port(0), _maxSize(0) {}
+Server::Server(): _routes(), _port(0), _maxSize(0) {}
 
 Server::~Server() {}
 

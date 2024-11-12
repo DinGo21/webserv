@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/30 11:28:26 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:03:03 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,16 @@
 # include <string>
 # include <vector>
 # include <cstdlib>
+# include <cstring>
 # include "Route.hpp"
 
 class Server
 {
 private:
 	std::vector<Route>		_routes;
-	uint					_routesCount;
-	uint					_port;
+	size_t					_routesCount;
 	size_t					_maxSize;
+	std::string				_port;
 	std::string				_host;
 	std::string				_serverName;
 	std::string				_errorPage;
@@ -35,18 +36,20 @@ public:
 	Server();
 	~Server();
 
-	uint		get_port() const;
-	void		set_port(const uint &port);
+	size_t		config_route(const std::string &route, std::vector<std::string> &args, size_t i);
+
+	std::string	get_port() const;
+	size_t		set_port(const std::vector<std::string> &args, size_t i);
 	size_t		get_maxSize() const;
-	void		set_maxSize(const size_t &maxSize);
+	size_t		set_maxSize(const std::vector<std::string> &args, size_t i);
 	std::string	get_host() const;
-	void		set_host(const std::string &host);
+	size_t		set_host(const std::vector<std::string> &args, size_t i);
 	std::string get_serverName() const;
-	void		set_serverName(const std::string &serverName);
+	size_t		set_serverName(const std::vector<std::string> &args, size_t i);
 	std::string	get_errorPage() const;
-	void		set_errorPage(const std::string &errorPage);
+	size_t		set_errorPage(const std::vector<std::string> &args, size_t i);
 	std::string	get_root() const;
-	void		set_root(const std::string &root);
+	size_t		set_root(const std::vector<std::string> &args, size_t i);
 };
 
 std::ostream	&operator<<(std::ostream &o, const Server &rhs);

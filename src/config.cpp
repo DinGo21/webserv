@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2024/10/30 11:37:57 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:03:23 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,51 +16,76 @@ static uint	server_config_set(Server &server, std::vector<std::string> &args, si
 {
 	if (!args[i].compare(0, 7, "listen"))
 	{
-		return server_config_set_port(server, args, i);
+		return server.set_port(args, i);
 	}
 	if (!args[i].compare(0, 6, "host"))
 	{
-		return server_config_set_host(server, args , i);
+		return server.set_host(args, i);
 	}
 	if (!args[i].compare(0, 12, "server_name"))
 	{
-		return server_config_set_serverName(server, args, i);
+		return server.set_serverName(args, i);
 	}
 	if (!args[i].compare(0, 11, "error_page"))
 	{
-		return server_config_set_errorPage(server, args, i);
+		return server.set_errorPage(args, i);
 	}
 	if (!args[i].compare(0, 21, "client_max_body_size"))
 	{
-		return server_config_set_maxSize(server, args, i);
+		return server.set_maxSize(args, i);
 	}
 	if (!args[i].compare(0, 5, "root"))
 	{
-		return server_config_set_root(server, args, i);
+		return server.set_root(args, i);
 	}
-	return 0;
+	if (args[i].compare(0, 6, "route") && !strchr("{};", args[i][0]))
+	{
+		std::cerr << "Unknown parameter: " << args[i] << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	return i;
 }
 
-//TODO: Handle multiple server contexts
 static void	server_config_parse(Server &server, std::vector<std::string> &args)
 {
 	size_t	i = 0;
-	uint	c = 0;
-	uint	f = 0;
 
-	while (i < args.size())
+	while (i < args.size() && args[i].compare(0, 7, "server"))
+		i++;
+	if (i + 1 < args.size() && !strchr("{", args[i + 1][0]))
 	{
-		if (!args[i].compare("server") && !args[i + 1].compare("{") && f != 1)
-			f = 1;
-		if (!args[i].compare("}") && f != 0)
-			f = 0;
-			
-		if (f)
-			i += server_config_set(server, args, i);
-		
+		std::cerr << "Expected a '{' after server keyword" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	i += 2;
+	while (i < args.size() && !strchr("}", args[i][0]))
+	{
+		if (strchr("{", args[i][0]))
+		{
+			std::cerr << "Syntax error: {" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		i = server_config_set(server, args, i);
+		if (i + 1 < args.size() && !args[i].compare("route") && !strchr("{};", args[i + 1][0]))
+		{
+			i++;
+			server.config_route(args[i], args, i);
+		}
 		i++;
 	}
 }
+		// if (f && !args[i].compare("route"))
+		// {
+		// 	i++;
+		// 	if (i + 1 < args.size() && !strchr("{};", args[i][0]) && strchr("{", args[i + 1][0]))
+		// 	{
+		// 		server.set_route(args[i++]);
+		// 	}
+		// 	while (i < args.size() && !strchr("}", args[i][0]))
+		// 	{
+		// 		if 
+		// 	}
+		// }
 
 //TODO: handle comments
 static std::vector<std::string>	server_config_get(std::ifstream &config)

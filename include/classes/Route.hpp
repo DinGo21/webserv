@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2024/11/12 11:26:08 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:49:09 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <string>
 # include <vector>
 # include <cstdlib>
+# include <cstring>
 
 class Route
 {
@@ -34,16 +35,21 @@ public:
 	Route(const uint id, const std::string &modifier);
 	~Route();
 
-	std::string	get_id() const;
+	uint		get_id() const;
+	std::string	get_root() const;
+	std::string	get_index() const;
+	std::string	get_return() const;
 	std::string	get_modifier() const;
 	bool		get_autoindex() const;
-	size_t		set_autoindex(const std::vector<std::string> args, size_t i);
-	std::string	get_root() const;
-	size_t		set_root(const std::vector<std::string> args, size_t i);
-	std::string	get_index() const;
-	size_t		set_index(const std::vector<std::string> args, size_t i);
-	std::string	get_return() const;
-	size_t		set_return(const std::vector<std::string> args, size_t i);
+	size_t		set_root(const std::vector<std::string> &args, size_t i);
+	size_t		set_index(const std::vector<std::string> &args, size_t i);
+	size_t		set_return(const std::vector<std::string> &args, size_t i);
+	size_t		set_methods(const std::vector<std::string> &args, size_t i);
+	size_t		set_autoindex(const std::vector<std::string> &args, size_t i);
+
 };
+
+std::ostream	&operator<<(std::ostream &o, const Route &rhs);
+
 
 #endif

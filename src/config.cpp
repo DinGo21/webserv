@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/12 17:03:23 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:48:51 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,40 +52,32 @@ static void	server_config_parse(Server &server, std::vector<std::string> &args)
 
 	while (i < args.size() && args[i].compare(0, 7, "server"))
 		i++;
-	if (i + 1 < args.size() && !strchr("{", args[i + 1][0]))
+	if (i + 1 < args.size() && args[i + 1][0] != '{')
 	{
 		std::cerr << "Expected a '{' after server keyword" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	i += 2;
-	while (i < args.size() && !strchr("}", args[i][0]))
+	while (i < args.size() && args[i][0] != '}')
 	{
 		if (strchr("{", args[i][0]))
 		{
 			std::cerr << "Syntax error: {" << std::endl;
 			exit(EXIT_FAILURE);
 		}
-		i = server_config_set(server, args, i);
+		if (args[i][0] == ';')
+			i++;
+		if (i < args.size())
+			i = server_config_set(server, args, i);
 		if (i + 1 < args.size() && !args[i].compare("route") && !strchr("{};", args[i + 1][0]))
 		{
 			i++;
-			server.config_route(args[i], args, i);
+			server.route_config(args[i], args, i);
 		}
 		i++;
 	}
+	std::cout << server;
 }
-		// if (f && !args[i].compare("route"))
-		// {
-		// 	i++;
-		// 	if (i + 1 < args.size() && !strchr("{};", args[i][0]) && strchr("{", args[i + 1][0]))
-		// 	{
-		// 		server.set_route(args[i++]);
-		// 	}
-		// 	while (i < args.size() && !strchr("}", args[i][0]))
-		// 	{
-		// 		if 
-		// 	}
-		// }
 
 //TODO: handle comments
 static std::vector<std::string>	server_config_get(std::ifstream &config)
@@ -138,5 +130,4 @@ void	server_config(Server &server, char *path)
 	}
 	server_config_parse(server, args);
 	config.close();
-	std::cout << server;
 }

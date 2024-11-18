@@ -6,37 +6,37 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/15 15:48:51 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:04:51 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
-static uint	server_config_set(Server &server, std::vector<std::string> &args, size_t i)
+static size_t	server_config_set(Server &server, std::vector<std::string> &args, size_t i)
 {
 	if (!args[i].compare(0, 7, "listen"))
 	{
-		return server.set_port(args, i);
+		return server_config_set_port(server, args, i);
 	}
 	if (!args[i].compare(0, 6, "host"))
 	{
-		return server.set_host(args, i);
+		return server_config_set_host(server, args, i);
 	}
 	if (!args[i].compare(0, 12, "server_name"))
 	{
-		return server.set_serverName(args, i);
+		return server_config_set_serverName(server, args, i);
 	}
 	if (!args[i].compare(0, 11, "error_page"))
 	{
-		return server.set_errorPage(args, i);
+		return server_config_set_errorPage(server, args, i);
 	}
 	if (!args[i].compare(0, 21, "client_max_body_size"))
 	{
-		return server.set_maxSize(args, i);
+		return server_config_set_maxSize(server, args, i);
 	}
 	if (!args[i].compare(0, 5, "root"))
 	{
-		return server.set_root(args, i);
+		return server_config_set_root(server, args, i);
 	}
 	if (args[i].compare(0, 6, "route") && !strchr("{};", args[i][0]))
 	{
@@ -65,19 +65,22 @@ static void	server_config_parse(Server &server, std::vector<std::string> &args)
 			std::cerr << "Syntax error: {" << std::endl;
 			exit(EXIT_FAILURE);
 		}
-		if (args[i][0] == ';')
-			i++;
-		if (i < args.size())
+		if (args[i][0] != ';')
 			i = server_config_set(server, args, i);
-		if (i + 1 < args.size() && !args[i].compare("route") && !strchr("{};", args[i + 1][0]))
-		{
-			i++;
-			server.route_config(args[i], args, i);
-		}
 		i++;
+	}
+	if (i == args.size())
+	{
+		std::cerr << "Expected: }" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 	std::cout << server;
 }
+		// if (i + 1 < args.size() && !args[i].compare("route") && !strchr("{};", args[i + 1][0]))
+		// {
+		// 	i++;
+		// 	server.route_config(args[i], args, i);
+		// }
 
 //TODO: handle comments
 static std::vector<std::string>	server_config_get(std::ifstream &config)

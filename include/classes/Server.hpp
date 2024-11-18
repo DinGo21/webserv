@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/13 16:05:42 by disantam         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:13:43 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,41 +17,40 @@
 # include <string>
 # include <vector>
 # include <cstdlib>
-# include <cstring>
-# include "Route.hpp"
+# include <stdexcept>
 
 class Server
 {
 private:
-	std::vector<Route>	_routes;
-	size_t				_routesCount;
-	size_t				_maxSize;
-	std::string			_port;
-	std::string			_host;
-	std::string			_root;
-	std::string			_serverName;
-	std::string			_errorPage;
-
-	size_t	route_config_set(std::vector<std::string> &args, size_t i);
+	std::string	_maxSize;
+	std::string	_port;
+	std::string	_host;
+	std::string	_root;
+	std::string	_serverName;
+	std::string	_errorPage;
 
 public:
 	Server();
 	~Server();
 
-	size_t		route_config(const std::string &route, std::vector<std::string> &args, size_t i);
+	class InvalidFormatException: public std::exception
+	{
+	public:
+		virtual const char	*what() const throw();
+	};
 
-	std::string	get_port() const;
-	std::string	get_host() const;
-	std::string	get_root() const;
-	size_t		get_maxSize() const;
-	std::string	get_errorPage() const;
-	std::string get_serverName() const;
-	size_t		set_port(const std::vector<std::string> &args, size_t i);
-	size_t		set_host(const std::vector<std::string> &args, size_t i);
-	size_t		set_root(const std::vector<std::string> &args, size_t i);
-	size_t		set_maxSize(const std::vector<std::string> &args, size_t i);
-	size_t		set_errorPage(const std::vector<std::string> &args, size_t i);
-	size_t		set_serverName(const std::vector<std::string> &args, size_t i);
+	const std::string	&get_port() const;
+	const std::string	&get_host() const;
+	const std::string	&get_root() const;
+	const std::string	&get_maxSize() const;
+	const std::string	&get_errorPage() const;
+	const std::string	&get_serverName() const;
+	void				set_port(const std::string &port);
+	void				set_host(const std::string &host);
+	void				set_root(const std::string &root);
+	void				set_maxSize(const std::string &maxSize);
+	void				set_errorPage(const std::string &errorPage);
+	void				set_serverName(const std::string &serverName);
 };
 
 std::ostream	&operator<<(std::ostream &o, const Server &rhs);

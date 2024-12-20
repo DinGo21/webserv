@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/18 16:13:43 by disantam         ###   ########.fr       */
+/*   Updated: 2024/12/20 09:51:31 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 
 class Server
 {
-private:
+
+protected:
 	std::string	_maxSize;
 	std::string	_port;
 	std::string	_host;
@@ -31,7 +32,8 @@ private:
 
 public:
 	Server();
-	~Server();
+	Server(const Server &server);
+	virtual ~Server();
 
 	class InvalidFormatException: public std::exception
 	{
@@ -45,12 +47,8 @@ public:
 	const std::string	&get_maxSize() const;
 	const std::string	&get_errorPage() const;
 	const std::string	&get_serverName() const;
-	void				set_port(const std::string &port);
-	void				set_host(const std::string &host);
-	void				set_root(const std::string &root);
-	void				set_maxSize(const std::string &maxSize);
-	void				set_errorPage(const std::string &errorPage);
-	void				set_serverName(const std::string &serverName);
+
+	Server				&operator=(const Server &rhs);
 };
 
 std::ostream	&operator<<(std::ostream &o, const Server &rhs);

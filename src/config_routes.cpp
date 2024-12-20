@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Route.cpp                                          :+:      :+:    :+:   */
+/*   config_routes.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/28 17:44:49 by diego             #+#    #+#             */
-/*   Updated: 2024/12/19 12:49:37 by disantam         ###   ########.fr       */
+/*   Created: 2024/12/20 14:36:24 by disantam          #+#    #+#             */
+/*   Updated: 2024/12/20 16:49:20 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "classes/Route.hpp"
+#include "webserv.hpp"
 
-// Route::Route() {}
-
-// Route::Route(const Route &route): Server(route)
-// {
-// 	*this = route;
-// }
-
-// Route::~Route() {}
+size_t	config_route(t_webserv *webserv, std::vector<std::string> &args, size_t i)
+{
+	i++;
+	if (args[i][0] != '/')
+	{
+		std::cerr << args[i] << " is not a route" << std::endl;
+	}
+}

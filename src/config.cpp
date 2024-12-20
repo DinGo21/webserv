@@ -6,39 +6,51 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/18 16:04:51 by disantam         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:37:11 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
-static size_t	server_config_set(Server &server, std::vector<std::string> &args, size_t i)
+static size_t	config_set_var(std::string *var, std::vector<std::string> &args, size_t i)
 {
-	if (!args[i].compare(0, 7, "listen"))
+	i++;
+	if (strchr("{};", args[i][0]))
 	{
-		return server_config_set_port(server, args, i);
+		std::cerr << "Syntax error: " << args[i] << std::endl;
+		exit(EXIT_FAILURE);
 	}
-	if (!args[i].compare(0, 6, "host"))
+	*var = args[i];
+	return i;
+}
+
+static size_t	config_set(t_webserv *webserv, std::vector<std::string> &args, size_t i)
+{
+	if (!args[i].compare(0, 5, "port"))
 	{
-		return server_config_set_host(server, args, i);
+		return config_set_var(&webserv->port, args, i);
 	}
-	if (!args[i].compare(0, 12, "server_name"))
+	else if (!args[i].compare(0, 5, "host"))
 	{
-		return server_config_set_serverName(server, args, i);
+		return config_set_var(&webserv->host, args, i);
 	}
-	if (!args[i].compare(0, 11, "error_page"))
+	else if (!args[i].compare(0, 12, "server_name"))
 	{
-		return server_config_set_errorPage(server, args, i);
+		return config_set_var(&webserv->serverName, args, i);
 	}
-	if (!args[i].compare(0, 21, "client_max_body_size"))
+	else if (!args[i].compare(0, 9, "max_size"))
 	{
-		return server_config_set_maxSize(server, args, i);
+		return config_set_var(&webserv->maxSize, args, i);
 	}
-	if (!args[i].compare(0, 5, "root"))
+	else if (!args[i].compare(0, 5, "root"))
 	{
-		return server_config_set_root(server, args, i);
+		return config_set_var(&webserv->root, args, i);
 	}
-	if (args[i].compare(0, 6, "route") && !strchr("{};", args[i][0]))
+	else if (!args[i].compare(0, 11, "error_page"))
+	{
+		return config_set_var(&webserv->errorPage, args, i);
+	}
+	else if (args[i].compare(0, 6, "route"))
 	{
 		std::cerr << "Unknown parameter: " << args[i] << std::endl;
 		exit(EXIT_FAILURE);
@@ -46,44 +58,37 @@ static size_t	server_config_set(Server &server, std::vector<std::string> &args, 
 	return i;
 }
 
-static void	server_config_parse(Server &server, std::vector<std::string> &args)
+static void	config_parse(t_webserv *webserv, std::vector<std::string> &args)
 {
 	size_t	i = 0;
 
 	while (i < args.size() && args[i].compare(0, 7, "server"))
 		i++;
-	if (i + 1 < args.size() && args[i + 1][0] != '{')
+	if (!config_check_brackets(args, i + 1))
 	{
-		std::cerr << "Expected a '{' after server keyword" << std::endl;
+		std::cerr << "Invalid Syntax" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	i += 2;
 	while (i < args.size() && args[i][0] != '}')
 	{
-		if (strchr("{", args[i][0]))
+		if (!args[i].compare("route"))
 		{
-			std::cerr << "Syntax error: {" << std::endl;
-			exit(EXIT_FAILURE);
+			config_route(webserv, args, i);
 		}
-		if (args[i][0] != ';')
-			i = server_config_set(server, args, i);
+		if (!strchr("{};", args[i][0]))
+			i = config_set(webserv, args, i);
 		i++;
 	}
-	if (i == args.size())
-	{
-		std::cerr << "Expected: }" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-	std::cout << server;
+	std::cout << "port: " << webserv->port << "\n";
+	std::cout << "host: " << webserv->host << "\n";
+	std::cout << "root: " << webserv->root << "\n";
+	std::cout << "maxSize: " << webserv->maxSize << "\n";
+	std::cout << "serverName: " << webserv->serverName << "\n";
+	std::cout << "errorPage: " << webserv->errorPage << std::endl;
 }
-		// if (i + 1 < args.size() && !args[i].compare("route") && !strchr("{};", args[i + 1][0]))
-		// {
-		// 	i++;
-		// 	server.route_config(args[i], args, i);
-		// }
 
-//TODO: handle comments
-static std::vector<std::string>	server_config_get(std::ifstream &config)
+static std::vector<std::string>	config_get_args(std::ifstream &config)
 {
 	size_t						i = 0;
 	size_t						j = 0;
@@ -115,22 +120,22 @@ static std::vector<std::string>	server_config_get(std::ifstream &config)
 	return args;
 }
 
-void	server_config(Server &server, char *path)
+void	config(t_webserv *webserv, char *path)
 {
-	std::ifstream				config;
+	std::ifstream				infile;
 	std::vector<std::string>	args;
 
-	config.open(path);
-	if (!config.is_open())
+	infile.open(path);
+	if (!infile.is_open())
 	{
 		std::cerr << "Unable to open file: " << path << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	args = server_config_get(config);
+	args = config_get_args(infile);
 	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++)
 	{
 		std::cout << *it << std::endl;
 	}
-	server_config_parse(server, args);
-	config.close();
+	config_parse(webserv, args);
+	infile.close();
 }

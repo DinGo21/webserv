@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Route.cpp                                          :+:      :+:    :+:   */
+/*   config_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/28 17:44:49 by diego             #+#    #+#             */
-/*   Updated: 2024/12/19 12:49:37 by disantam         ###   ########.fr       */
+/*   Created: 2024/12/12 12:03:03 by disantam          #+#    #+#             */
+/*   Updated: 2024/12/20 11:10:01 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "classes/Route.hpp"
+#include "webserv.hpp"
 
-// Route::Route() {}
+uint	config_check_brackets(std::vector<std::string> &args, size_t i)
+{
+	uint	f = 1;
 
-// Route::Route(const Route &route): Server(route)
-// {
-// 	*this = route;
-// }
-
-// Route::~Route() {}
+	if (i < args.size() && args[i][0] != '{')
+		return 0;
+	i++;
+	while (i < args.size() && f != 0)
+	{
+		if (args[i][0] == '{')
+			f++;
+		if (args[i][0] == '}')
+			f--;
+		i++;
+	}
+	if (f != 0)
+		return 0;
+	return 1;
+}

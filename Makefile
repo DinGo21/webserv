@@ -3,7 +3,6 @@ NAME = webserv
 CC = c++
 
 CFLAGS = -Werror -Wall -Wextra -std=c++98
-
 RM = rm -rf
 
 SRC_DIR = src/

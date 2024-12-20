@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:24:17 by disantam          #+#    #+#             */
-/*   Updated: 2024/11/18 15:28:49 by disantam         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:34:18 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,32 @@
 # include "classes/Route.hpp"
 # include "classes/Server.hpp"
 
+/*Utils*/
+uint	config_check_brackets(std::vector<std::string> &args, size_t i);
+
 /*Configs*/
 
-void	server_config(Server &server, char *path);
-size_t	server_config_set_port(Server &server, const std::vector<std::string> &args, size_t i);
-size_t	server_config_set_host(Server &server, const std::vector<std::string> &args, size_t i);
-size_t	server_config_set_root(Server &server, const std::vector<std::string> &args, size_t i);
-size_t	server_config_set_maxSize(Server &server, const std::vector<std::string> &args, size_t i);
-size_t	server_config_set_errorPage(Server &server, const std::vector<std::string> &args, size_t i);
-size_t	server_config_set_serverName(Server &server, const std::vector<std::string> &args, size_t i);
+typedef	struct	s_webserv
+{
+	std::string	maxSize;
+	std::string	port;
+	std::string	host;
+	std::string	root;
+	std::string	serverName;
+	std::string	errorPage;
+} 				t_webserv;
+
+typedef struct 	s_route
+{
+	std::string	root;
+	std::string	index;
+	std::string	redir;
+	std::string	methods[2];
+	bool		autoindex;
+}				t_route;
+
+void	config(t_webserv *webserv, char *path);
+size_t	config_route(t_webserv *webserv, std::vector<std::string> &args, size_t i);
+// size_t	config_set_value(std::string &str, const std::vector<std::string> &args, size_t i);
 
 #endif

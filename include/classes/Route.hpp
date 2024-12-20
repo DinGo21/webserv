@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2024/11/18 14:18:49 by disantam         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:14:48 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,30 @@
 # include <vector>
 # include <cstdlib>
 # include <cstring>
+# include "Server.hpp"
 
-class Route
+class Route: public Server
 {
-private:
-	const uint			_id;
-	const std::string	_modifier;
-	bool				_autoindex;
-	std::string			_root;
-	std::string			_index;
-	std::string			_return;
-	std::string 		_methods[2];
+protected:
+	std::string	_modifier;
+	std::string	_return;
+	std::string _methods[2];
+	bool		_autoindex;
 
 public:
 	Route();
-	Route(const uint id, const std::string &modifier);
-	~Route();
+	Route(const Route &route);
+	virtual ~Route();
 
-	// uint		get_id() const;
-	// std::string	get_root() const;
-	// std::string	get_index() const;
-	// std::string	get_return() const;
-	// std::string	get_modifier() const;
-	// bool		get_autoindex() const;
-	// size_t		set_root(const std::vector<std::string> &args, size_t i);
-	// size_t		set_index(const std::vector<std::string> &args, size_t i);
-	// size_t		set_return(const std::vector<std::string> &args, size_t i);
-	// size_t		set_methods(const std::vector<std::string> &args, size_t i);
-	// size_t		set_autoindex(const std::vector<std::string> &args, size_t i);
+	std::string	get_return() const;
+	std::string	get_modifier() const;
+	bool		get_autoindex() const;
+	void		set_return(const std::string &r);
+	void		set_autoindex(const bool autoindex);
+	void		set_method(const std::string &method);
+	void		set_modifier(const std::string &modifier);
+
+	Route		&operator=(const Route &rhs);
 };
 
 // std::ostream	&operator<<(std::ostream &o, const Route &rhs);

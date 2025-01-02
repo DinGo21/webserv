@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:36:24 by disantam          #+#    #+#             */
-/*   Updated: 2024/12/20 16:49:20 by disantam         ###   ########.fr       */
+/*   Updated: 2024/12/29 19:52:27 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,5 @@ size_t	config_route(t_webserv *webserv, std::vector<std::string> &args, size_t i
 	{
 		std::cerr << args[i] << " is not a route" << std::endl;
 	}
+	
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2024/12/20 09:00:30 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/02 13:32:43 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	main(int argc, char *argv[])
 		std::cerr << "Server requires configuration file" << std::endl;
 		return 1;
 	}
-	config(&webserv, argv[1]);
+	init_webserv(webserv);
+	config(webserv, argv[1]);
 	return 0;
 }

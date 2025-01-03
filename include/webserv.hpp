@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:24:17 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/02 16:12:38 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/03 14:26:59 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 
 typedef struct 	s_route
 {
+	std::string path;
 	std::string	root;
 	std::string	index;
 	std::string	redir;
@@ -49,8 +50,9 @@ typedef	struct	s_webserv
 
 void	init_webserv(t_webserv &webserv);
 
-/*Utils*/
+/*errors*/
 
+void	config_error(t_webserv &webserv, const std::string &err_message);
 
 /*Configs*/
 

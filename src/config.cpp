@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/02 16:11:25 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/03 14:09:25 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 static void	config_parse_prerun(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
 	uint	f = 1;
+	size_t	count = 0;
 	
 	if (i < tokens.size() && tokens[i][0] != '{')
 	{
-		std::cerr << "Expected '{' after server keyword." << std::endl;
-		exit(EXIT_FAILURE);
+		config_error(webserv, "Expected '{' after server keyword.");
 	}
 	i++;
 	while (i < tokens.size() && f != 0)
@@ -28,20 +28,35 @@ static void	config_parse_prerun(t_webserv &webserv, std::vector<std::string> &to
 			f++;
 		if (tokens[i][0] == '}')
 			f--;
-		if (!tokens[i].compare(0, 6, "route"))
+		if (!tokens[i].compare(0, 6, "route") && f < 2)
 		{
-			webserv.routesCount++;
+			count++;
 		}
 		i++;
 	}
 	if (f != 0)
 	{
-		std::cerr << "Unclosed brackets" << std::endl;
-		exit(EXIT_FAILURE);
+		config_error(webserv, "Unclosed brackets");
 	}
-	webserv.routes = new t_route[webserv.routesCount];
+	webserv.routes = new t_route[count];
 	if (!webserv.routes)
 		exit(EXIT_FAILURE);
+}
+
+static void config_route_parse(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
+{
+	if (tokens[i + 1][0] != '/' || tokens[i + 2][0] != '{')
+	{
+		config_error(webserv, "Syntax Error");
+	}
+	webserv.routes[webserv.routesCount].path = tokens[i + 1];
+	i += 2;
+	while (tokens[i][0] != '}')
+	{
+		if (!strchr("{};", tokens[i][0]))
+			i = config_route_set(webserv, tokens, i);
+	}
+
 }
 
 static void	config_server_parse(t_webserv &webserv, std::vector<std::string> &tokens)
@@ -52,16 +67,15 @@ static void	config_server_parse(t_webserv &webserv, std::vector<std::string> &to
 		i++;
 	if (i >= tokens.size())
 	{
-		std::cerr << "Unexpected end of file" << std::endl;
-		exit(EXIT_FAILURE);
+		config_error(webserv, "Unexpected end of file");
 	}
 	config_parse_prerun(webserv, tokens, i + 1);
 	i += 2;
-	while (i < tokens.size() && tokens[i][0] != '}')
+	while (tokens[i][0] != '}')
 	{
 		if (!tokens[i].compare(0, 6, "route"))
 		{
-			// config_route(webserv, args, i);
+			config_route_parse(webserv, tokens, i);
 		}
 		if (!strchr("{};", tokens[i][0]))
 			i = config_server_set(webserv, tokens, i);
@@ -109,8 +123,7 @@ void	config(t_webserv &webserv, char *path)
 	infile.open(path);
 	if (!infile.is_open())
 	{
-		std::cerr << "Unable to open file: " << path << std::endl;
-		exit(EXIT_FAILURE);
+		config_error(webserv, "Unable to open configuration file");
 	}
 	tokens = config_lexer(infile);
 	for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end() - 1; it++)

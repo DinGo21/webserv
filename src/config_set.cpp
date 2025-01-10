@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_set.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:01:09 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/03 16:53:45 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/10 12:44:13 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static size_t	config_set_string(t_webserv &webserv, std::string &var, std::vecto
 static size_t	config_set_autoindex(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
 	i++;
-	if (tokens[i].compare(0, 3, "on") && tokens[i].compare(0, 4, "off"))
+	if (tokens[i] != "ON" && tokens[i] != "OFF")
 	{
 		config_error(webserv, "Syntax Error");
 	}
 	webserv.routes[webserv.routesCount].autoindex = 0;
-	if (tokens[i].compare(0, 3, "on"))
+	if (tokens[i] == "ON")
 	{
 		webserv.routes[webserv.routesCount].autoindex = 1;
 	}
@@ -40,36 +40,50 @@ static size_t	config_set_autoindex(t_webserv &webserv, std::vector<std::string> 
 
 static size_t	config_set_methods(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
+	size_t	j = ++i + 2;
 
+	while (i < j && tokens[i][0] != ';')
+	{
+		if (tokens[i] != "GET" && tokens[i] != "POST" && tokens[i][0] != ';')
+		{
+			config_error(webserv, "Syntax Error");
+		}
+		if (tokens[i] == "GET")	
+			webserv.routes[webserv.routesCount].methods[GET] = 1;
+		if (tokens[i] == "POST")
+			webserv.routes[webserv.routesCount].methods[POST] = 1;
+		i++;
+	}
+	return i;
 }
 
 size_t	config_server_set(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
-	if (!tokens[i].compare(0, 5, "port"))
+	if (tokens[i] == "port")
 	{
 		return config_set_string(webserv, webserv.port, tokens, i);
 	}
-	if (!tokens[i].compare(0, 5, "host"))
+	if (tokens[i] == "host")
 	{
 		return config_set_string(webserv, webserv.host, tokens, i);
 	}
-	if (!tokens[i].compare(0, 12, "server_name"))
+	if (tokens[i] == "server_name")
 	{
 		return config_set_string(webserv, webserv.serverName, tokens, i);
 	}
-	if (!tokens[i].compare(0, 9, "max_size"))
+	if (tokens[i] == "max_size")
 	{
 		return config_set_string(webserv, webserv.maxSize, tokens, i);
 	}
-	if (!tokens[i].compare(0, 5, "root"))
+	if (tokens[i] == "root")
 	{
 		return config_set_string(webserv, webserv.root, tokens, i);
 	}
-	if (!tokens[i].compare(0, 11, "error_page"))
+	if (tokens[i] == "error_page")
 	{
 		return config_set_string(webserv, webserv.errorPage, tokens, i);
 	}
-	if (tokens[i].compare(0, 6, "route"))
+	if (tokens[i] != "route")
 	{
 		config_error(webserv, "Unknown parameter");
 	}
@@ -78,25 +92,30 @@ size_t	config_server_set(t_webserv &webserv, std::vector<std::string> &tokens, s
 
 size_t	config_route_set(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
-	if (!tokens[i].compare(0, 5, "root"))
+	if (tokens[i] == "root")
 	{
 		return config_set_string(webserv, webserv.routes[webserv.routesCount].root, tokens, i);
 	}
-	if (!tokens[i].compare(0, 6, "index"))
+	if (tokens[i] == "index")
 	{
 		return config_set_string(webserv, webserv.routes[webserv.routesCount].index, tokens, i);
 	}
-	if (!tokens[i].compare(0, 7, "return"))
+	if (tokens[i] == "redir")
 	{
 		return config_set_string(webserv, webserv.routes[webserv.routesCount].redir, tokens, i);
 	}
-	if (!tokens[i].compare(0, 7, "autoindex"))
+	if (tokens[i] == "autoindex")
 	{
 		return config_set_autoindex(webserv, tokens, i);
 	}
-	if (!tokens[i].compare(0, 9, "methods"))
+	if (tokens[i] == "methods")
 	{
 		return config_set_methods(webserv, tokens, i);
 	}
+	if (strchr("{};", tokens[i][0]))
+	{
+		config_error(webserv, "Unknown parameter");
+	}
+	return i;
 }
 

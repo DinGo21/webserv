@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2024/12/13 17:14:48 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/10 09:35:08 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ class Route: public Server
 protected:
 	std::string	_modifier;
 	std::string	_return;
-	std::string _methods[2];
 	bool		_autoindex;
 
 public:

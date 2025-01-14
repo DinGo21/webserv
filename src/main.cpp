@@ -6,30 +6,38 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/14 12:26:03 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:53:38 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
-void	create_server(t_config &conf)
+Server	*config_server(const char *path)
 {
-	Server	*servers;
+	Config	config;
 
-	
+	if (config.set_file(path) < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	config.read_file();
+	if (config.init_server() < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	return NULL;
 }
 
 int	main(int argc, char *argv[])
 {
-	t_config	conf;
+	Server	*servers;
 
 	if (argc != 2)
 	{
 		std::cerr << "No arguments passed, using default configuration file" << std::endl;
 		return 1;
 	}
-	config(conf, argv[1]);
-	create_server(conf);
-	delete [] conf.webserv;
+	servers = config_server(argv[1]);
+	(void)servers;
 	return 0;
 }

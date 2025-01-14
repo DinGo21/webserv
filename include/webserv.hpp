@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:24:17 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/13 10:49:36 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:11:16 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include "defs/structs.hpp"
+# include "classes/Config.hpp"
 # include "classes/Route.hpp"
 # include "classes/Server.hpp"
+
 
 /*init*/
 

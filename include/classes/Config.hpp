@@ -1,48 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/14 15:17:39 by disantam         ###   ########.fr       */
+/*   Created: 2025/01/14 12:57:37 by disantam          #+#    #+#             */
+/*   Updated: 2025/01/14 16:53:58 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __SERVER_H__
-# define __SERVER_H__
+#ifndef __CONFIG_H__
+# define __CONFIG_H__
 
 # include <iostream>
+# include <fstream>
 # include <string>
 # include <vector>
 # include <cstdlib>
+# include <cstring>
 # include <stdexcept>
+# include "classes/Server.hpp"
 
-class Server
+class	Config
 {
-
-protected:
-	static uint	_nServers;
-
-	std::string	_maxSize;
-	std::string	_port;
-	std::string	_host;
-	std::string	_root;
-	std::string	_serverName;
-	std::string	_errorPage;
+private:
+	Server						*_servers;
+	std::ifstream				_file;
+	std::vector<std::string>	_tokens;
 
 public:
-	Server();
-	virtual ~Server();
+	Config();
+	~Config();
 
-	class InvalidFormatException: public std::exception
-	{
-	public:
-		virtual const char	*what() const throw();
-	};
-
-	static uint	get_nServers();
+	int	set_file(const char *path);
+	int	read_file();
+	int	init_server();
 };
 
-#endif
+# endif

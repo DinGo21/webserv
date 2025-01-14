@@ -6,13 +6,18 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2024/12/20 10:07:43 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:51:26 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Server.hpp"
 
 Server::Server() {}
+
+Server::Server(const t_webserv &webserv): _port(webserv.port), _host(webserv.host), _root(webserv.root), _maxSize(webserv.maxSize), _errorPage(webserv.errorPage), _serverName(webserv.serverName)
+{
+
+}
 
 Server::Server(const Server &server)
 {
@@ -106,16 +111,16 @@ const std::string	&Server::get_serverName() const
 // 	this->_serverName = serverName;
 // }
 
-Server	&Server::operator=(const Server &rhs)
-{
-	this->_maxSize = rhs._maxSize;
-	this->_port = rhs._port;
-	this->_host = rhs._host;
-	this->_root = rhs._root;
-	this->_serverName = rhs._serverName;
-	this->_errorPage = rhs._errorPage;
-	return *this;
-}
+// Server	&Server::operator=(const Server &rhs)
+// {
+// 	this->_maxSize = rhs._maxSize;
+// 	this->_port = rhs._port;
+// 	this->_host = rhs._host;
+// 	this->_root = rhs._root;
+// 	this->_serverName = rhs._serverName;
+// 	this->_errorPage = rhs._errorPage;
+// 	return *this;
+// }
 
 std::ostream    &operator<<(std::ostream &o, const Server &rhs)
 {

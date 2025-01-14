@@ -21,6 +21,7 @@ all : obj $(NAME)
 $(OBJ_DIR)%.o : $(SRC_DIR)%.cpp
 	$(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 
+
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -I $(INCLUDES) -o $(NAME)
 

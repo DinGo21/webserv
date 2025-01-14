@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 16:01:09 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/10 12:44:13 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:37:40 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static size_t	config_set_string(t_webserv &webserv, std::string &var, std::vector<std::string> &tokens, size_t i)
 {
 	i++;
-	if (strchr("{};", tokens[i][0]))
+	if (strchr("{};", tokens[i][0]) || tokens[i + 1][0] != ';')
 	{
 		config_error(webserv, "Syntax Error");
 	}

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2024/12/20 09:51:31 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:51:18 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <vector>
 # include <cstdlib>
 # include <stdexcept>
+# include "defs/structs.hpp"
 
 class Server
 {
@@ -32,6 +33,7 @@ protected:
 
 public:
 	Server();
+	Server(const t_webserv &webserv);
 	Server(const Server &server);
 	virtual ~Server();
 
@@ -47,6 +49,7 @@ public:
 	const std::string	&get_maxSize() const;
 	const std::string	&get_errorPage() const;
 	const std::string	&get_serverName() const;
+	const std::
 
 	Server				&operator=(const Server &rhs);
 };

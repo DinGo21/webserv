@@ -6,17 +6,18 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:21 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/10 15:34:04 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:23:59 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
-static void	config_parse_prerun(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
+static void	config_server_preload(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
 	uint	f = 1;
 	size_t	count = 0;
 
+	init_webserv(webserv);
 	if (i < tokens.size() && tokens[i][0] != '{')
 	{
 		config_error(webserv, "Expected '{' after server keyword.");
@@ -47,9 +48,13 @@ static void	config_parse_prerun(t_webserv &webserv, std::vector<std::string> &to
 
 static size_t config_route_parse(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
-	if (tokens[i + 1][0] != '/' || tokens[i + 2][0] != '{')
+	if (tokens[i + 1][0] != '/')
 	{
-		config_error(webserv, "Syntax Error");
+		config_error(webserv, "Expected route URI after keyword");
+	}
+	if (tokens[i + 2][0] != '{')
+	{
+		config_error(webserv, "Expected '{' after route keyword");
 	}
 	webserv.routes[webserv.routesCount].path = tokens[i + 1];
 	i += 2;
@@ -63,17 +68,13 @@ static size_t config_route_parse(t_webserv &webserv, std::vector<std::string> &t
 	return i;
 }
 
-static void	config_server_parse(t_webserv &webserv, std::vector<std::string> &tokens)
+static size_t	config_server_parse(t_webserv &webserv, std::vector<std::string> &tokens, size_t i)
 {
-	size_t	i = 0;
-
-	while (i < tokens.size() && tokens[i] != "server")
-		i++;
 	if (i >= tokens.size())
 	{
 		config_error(webserv, "Unexpected end of file");
 	}
-	config_parse_prerun(webserv, tokens, i + 1);
+	config_server_preload(webserv, tokens, i + 1);
 	i += 2;
 	while (tokens[i][0] != '}')
 	{
@@ -82,8 +83,63 @@ static void	config_server_parse(t_webserv &webserv, std::vector<std::string> &to
 			i = config_route_parse(webserv, tokens, i);
 		}
 		if (!strchr("{};", tokens[i][0]))
+		{
 			i = config_server_set(webserv, tokens, i);
+		}
 		i++;
+	}
+	return i;
+}
+
+static void	config_parse_preload(t_config &conf, std::vector<std::string> &tokens)
+{
+	size_t		i = 0;
+	uint		count = 0;
+	t_webserv	*webserv = NULL;
+
+	while (i < tokens.size())
+	{
+		if (tokens[i] == "server")
+		{
+			count++;
+		}
+		i++;
+	}
+	webserv = new t_webserv[count];
+	if (!webserv)
+	{
+		std::cerr << "memory error" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	conf.serverCount = count;
+	conf.webserv = webserv;
+}
+
+static void	config_parse(t_config &conf, std::vector<std::string> &tokens)
+{
+	size_t		i = 0;
+	size_t		count = 0;
+
+	config_parse_preload(conf, tokens);
+	while (count < conf.serverCount)
+	{
+		if (tokens[i] == "server")
+		{
+			i = config_server_parse(conf.webserv[count++], tokens, i);
+		}
+		i++;
+	}
+	for(size_t j = 0; j < conf.serverCount; j++)
+	{
+		std::cout << "server: " << j + 1 << '\n';
+		std::cout << "server.port: " << conf.webserv[j].port << '\n';
+		std::cout << "server.host: " << conf.webserv[j].host << '\n';
+		std::cout << "server.root: " << conf.webserv[j].root << '\n';
+		std::cout << "server.errorPage: " << conf.webserv[j].errorPage << '\n';
+		std::cout << "server.serverName: " << conf.webserv[j].serverName << '\n';
+		std::cout << "server.maxSize: " << conf.webserv[j].maxSize << '\n';
+		std::cout << "server.routesCount: " << conf.webserv[j].routesCount << '\n';
+		std::cout << std::endl;
 	}
 }
 
@@ -119,7 +175,7 @@ static std::vector<std::string>	config_lexer(std::ifstream &config)
 	return args;
 }
 
-void	config(t_webserv &webserv, char *path)
+void	config(t_config &conf, char *path)
 {
 	std::ifstream				infile;
 	std::vector<std::string>	tokens;
@@ -127,9 +183,10 @@ void	config(t_webserv &webserv, char *path)
 	infile.open(path);
 	if (!infile.is_open())
 	{
-		config_error(webserv, "Unable to open configuration file");
+		std::cerr << "Unable to open configuration file" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 	tokens = config_lexer(infile);
-	config_server_parse(webserv, tokens);
+	config_parse(conf, tokens);
 	infile.close();
 }

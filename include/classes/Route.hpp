@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2025/01/10 09:35:08 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/15 14:50:59 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,29 +18,21 @@
 # include <vector>
 # include <cstdlib>
 # include <cstring>
-# include "Server.hpp"
 
-class Route: public Server
+class Route
 {
 protected:
-	std::string	_modifier;
-	std::string	_return;
+	std::string	_path;
+	std::string	_index;
+	std::string	_root;
+	std::string	_redir;
+	bool		_methods[2];
 	bool		_autoindex;
 
 public:
 	Route();
-	Route(const Route &route);
-	virtual ~Route();
+	~Route();
 
-	std::string	get_return() const;
-	std::string	get_modifier() const;
-	bool		get_autoindex() const;
-	void		set_return(const std::string &r);
-	void		set_autoindex(const bool autoindex);
-	void		set_method(const std::string &method);
-	void		set_modifier(const std::string &modifier);
-
-	Route		&operator=(const Route &rhs);
 };
 
 // std::ostream	&operator<<(std::ostream &o, const Route &rhs);

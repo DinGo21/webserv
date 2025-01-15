@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/14 16:53:38 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/15 14:12:11 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Server	*config_server(const char *path)
 		exit(EXIT_FAILURE);
 	}
 	config.read_file();
-	if (config.init_server() < 0)
+	if (config.init() < 0)
 	{
 		exit(EXIT_FAILURE);
 	}

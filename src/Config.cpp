@@ -6,13 +6,23 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:28:32 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/15 21:19:10 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:29:30 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Config.hpp"
 
-Config::Config(): _servers(), _file(), _tokens() {}
+uint	Config::is_server_parameter(const std::string str)
+{
+	if (str != "port" && str != "host" && str != "root" && str != "max_size" &&
+		str != "server_name" && str != "error_page" && str != "route")
+	{
+		return (0);
+	}
+	return (1);
+}
+
+Config::Config(): _servers(NULL), _file(), _tokens() {}
 
 Config::~Config()
 {
@@ -59,10 +69,15 @@ int	Config::read_file()
 			i++;
 		}
 	}
+	for (std::vector<std::string>::iterator it = this->_tokens.begin(); it != this->_tokens.end(); it++)
+	{
+		std::cout << *it << std::endl;
+	}
 	return (0);
 }
 
-int	Config::declaration_is_closed(uint i)
+
+uint	Config::declaration_is_closed(uint i)
 {
 	uint	f = 1;
 
@@ -84,82 +99,56 @@ int	Config::declaration_is_closed(uint i)
 	return (i);
 }
 
-Route	*Config::init_routes(uint i, uint nServer)
+// int		Config::server_set(uint &i, uint count)
+// {
+
+// }
+
+uint	Config::parse_server(uint &i, uint count)
 {
-	uint	end = declaration_is_closed(i++);
-	uint	count = 0;
-	Route	*routes = NULL;
+	uint	end = declaration_is_closed(++i);
 
 	if (end == 0)
-	{
-		return (NULL);
-	}
+		return (0);
 	while (i < end)
 	{
+		if (!Config::is_server_parameter(this->_tokens[i]))
+		{
+			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
+			return (0);
+		}
+		// if (this->server_set(i, count) < 0)
+		// 	return (0);
 		if (this->_tokens[i] == "route")
 		{
-			count++;
+			i++;
 		}
 		i++;
 	}
-	routes = new Route[count];
-	if (!routes)
-	{
-		return (NULL);
-	}
-	this->_servers[nServer].set_routes(routes, count);
-	std::cout << "created " << count << " routes for server " << nServer << std::endl;
-	return (routes);
+	return (count + 1);
 }
 
-Server	*Config::init_servers(uint i, uint count)
+int	Config::parse()
 {
-	while (i < this->_tokens.size() && this->_tokens[i] != "server")
-		i++;
-	if (i >= this->_tokens.size())
+	uint	i = 0;
+	uint	count = 0;
+	
+	while (count < Server::get_nServers())
 	{
-		this->_servers = new Server[count];
-		if (!this->_servers)
+		while (this->_tokens[i] != "server" && this->_tokens[i][0] == ';')
+			i++;
+		std::cout << this->_tokens[i] << std::endl;
+		if (this->_tokens[i] != "server")
 		{
-			return (NULL);
+			std::cerr << this->_tokens[i] << " is not valid" << std::endl;
+			return (-1);
 		}
-		return (this->_servers);
+		count = this->parse_server(i, count);
+		i++;
 	}
-	if (this->_tokens[i] == "server")
+	if (count == 0)
 	{
-		if (!this->init_servers(i + 1, count + 1))
-			return NULL;
-	}
-	std::cout << "server " << count << " has been created" << std::endl; 
-	if (!init_routes(i + 1, count))
-		return (NULL);
-	return (this->_servers);
-}
-
-int	Config::init()
-{
-	if (!this->init_servers(0, 0))
-	{
-		std::cerr << "memory allocation error" << std::endl;
-		return (-1);
-	}
-	if (Server::get_nServers() == 0)
-	{
-		std::cerr << "Could not configure any server" << std::endl;
 		return (-1);
 	}
 	return (0);
-	// for (uint i = 0; i < this->_tokens.size(); i++)
-	// {
-	// 	if (this->_tokens[i] == "server")
-	// 	{
-	// 		count++;
-	// 	}
-	// }
-	// this->_servers = new Server[count];
-	// if (!this->_servers)
-	// {
-	// 	std::cerr << "Could not initialize server" << std::endl;
-	// 	return (-1);
-	// }
 }

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/01/15 21:02:49 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/16 09:39:58 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ uint	Server::get_nServers()
 	return Server::_nServers;
 }
 
-Server::Server(): _nRoutes(), _routes(), _port(), _host(), _root(), _maxSize(), _serverName(), _errorPage() 
+Server::Server(): _nRoutes(), _routes(NULL), _port(), _host(), _root(), _maxSize(), _serverName(), _errorPage() 
 {
 	Server::_nServers++;
 }

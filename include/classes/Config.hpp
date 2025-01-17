@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:57:37 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/16 14:26:16 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:06:20 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ private:
 	Route	*init_routes(uint i, uint nServer);
 
 	uint	parse_server(uint &i, uint count);
-	int		server_set(uint &i, uint count);
+	uint	parse_route(uint &i, uint routeCount, Route &route);
+	int		server_set(uint &i, uint routeCount, Server &server);
+	int		server_set_string(uint &i, Server &server, void (Server::*set)(const std::string &));
 
 public:
 	Config();

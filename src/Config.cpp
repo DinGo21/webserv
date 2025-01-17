@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:28:32 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/16 15:29:30 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:06:39 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,56 +99,58 @@ uint	Config::declaration_is_closed(uint i)
 	return (i);
 }
 
-// int		Config::server_set(uint &i, uint count)
-// {
-
-// }
-
-uint	Config::parse_server(uint &i, uint count)
+int	Config::server_set_string(uint &i, Server &server, void (Server::*set)(const std::string &))
 {
-	uint	end = declaration_is_closed(++i);
-
-	if (end == 0)
-		return (0);
-	while (i < end)
-	{
-		if (!Config::is_server_parameter(this->_tokens[i]))
-		{
-			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
-			return (0);
-		}
-		// if (this->server_set(i, count) < 0)
-		// 	return (0);
-		if (this->_tokens[i] == "route")
-		{
-			i++;
-		}
-		i++;
-	}
-	return (count + 1);
-}
-
-int	Config::parse()
-{
-	uint	i = 0;
-	uint	count = 0;
-	
-	while (count < Server::get_nServers())
-	{
-		while (this->_tokens[i] != "server" && this->_tokens[i][0] == ';')
-			i++;
-		std::cout << this->_tokens[i] << std::endl;
-		if (this->_tokens[i] != "server")
-		{
-			std::cerr << this->_tokens[i] << " is not valid" << std::endl;
-			return (-1);
-		}
-		count = this->parse_server(i, count);
-		i++;
-	}
-	if (count == 0)
+	if (strchr("{};", this->_tokens[++i][0]))
 	{
 		return (-1);
+	}
+	try
+	{
+		std::cout << this->_tokens[i] << std::endl;
+		(server.*set)(this->_tokens[i]);
+	}
+	catch(const std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+		return (-1);
+	}
+	if (this->_tokens[++i][0] != ';')
+	{
+		return (-1);
+	}
+	return (0);
+}
+
+int	Config::server_set(uint &i, uint routeCount, Server &server)
+{
+	if (this->_tokens[i] == "port")
+	{
+		return this->server_set_string(i, server, &Server::set_port);
+	}
+	if (this->_tokens[i] == "host")
+	{
+		return this->server_set_string(i, server, &Server::set_host);
+	}
+	if (this->_tokens[i] == "root")
+	{
+		return this->server_set_string(i, server, &Server::set_root);
+	}
+	if (this->_tokens[i] == "max_size")
+	{
+		return this->server_set_string(i, server, &Server::set_maxSize);
+	}
+	if (this->_tokens[i] == "server_name")
+	{
+		return this->server_set_string(i, server, &Server::set_serverName);
+	}
+	if (this->_tokens[i] == "error_page")
+	{
+		return this->server_set_string(i, server, &Server::set_errorPage);
+	}
+	if (this->_tokens[i] == "route")
+	{
+		routeCount = this->parse_route(i, routeCount, server.get_route(routeCount));
 	}
 	return (0);
 }

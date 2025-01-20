@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/16 15:02:10 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:47:07 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ Server	*config_server(const char *path)
 	config.read_file();
 	if (config.init() < 0)
 	{
+		delete [] config.servers;
 		return (NULL);
 	}
 	if (config.parse() < 0)
 	{
+		delete [] config.servers;
 		return (NULL);
 	}
-	return NULL;
+	return config.servers;
 }
 
 int	main(int argc, char *argv[])
@@ -42,6 +44,6 @@ int	main(int argc, char *argv[])
 		return 1;
 	}
 	servers = config_server(argv[1]);
-	(void)servers;
+	delete [] servers;
 	return 0;
 }

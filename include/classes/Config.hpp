@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:57:37 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/17 12:06:20 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:38:35 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@
 # include "classes/Route.hpp"
 # include "classes/Server.hpp"
 
-class	Config
+class Config
 {
 private:
-	Server						*_servers;
 	std::ifstream				_file;
 	std::vector<std::string>	_tokens;
 
@@ -35,14 +34,21 @@ private:
 
 	uint	parse_server(uint &i, uint count);
 	uint	parse_route(uint &i, uint routeCount, Route &route);
-	int		server_set(uint &i, uint routeCount, Server &server);
-	int		server_set_string(uint &i, Server &server, void (Server::*set)(const std::string &));
+	int		set_server(uint &i, uint &routeCount, Server &server);
+	int		set_route(uint &i, Route &route);
+	int		set_server_string(uint &i, Server &server, void (Server::*set)(const std::string &));
+	int		set_route_string(uint &i, Route &route, void (Route::*set)(const std::string &));
+	int		set_route_methods(uint &i, Route &route);
+	int		set_route_autoindex(uint &i, Route &route);
 
 public:
+	Server	*servers;
+
 	Config();
 	~Config();
 
-	static uint	is_server_parameter(const std::string str);
+	static uint	is_server_parameter(const std::string &str);
+	static uint	is_route_parameter(const std::string &str);
 
 	uint	declaration_is_closed(uint i);
 	int		set_file(const char *path);

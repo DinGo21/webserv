@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/01/17 11:27:06 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:29:23 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ const char	*Server::OutOfBoundsException::what() const throw()
 	return "Trying to access out of bounds";
 }
 
+uint	Server::get_nRoutes() const
+{
+	return (this->_nRoutes);
+}
+
 Route	&Server::get_route(const uint nRoute) const
 {
 	if (nRoute >= this->_nRoutes)
@@ -46,6 +51,36 @@ Route	&Server::get_route(const uint nRoute) const
 		throw (Server::OutOfBoundsException());
 	}
 	return (this->_routes[nRoute]);
+}
+
+const std::string	&Server::get_port() const
+{
+	return (this->_port);
+}
+
+const std::string	&Server::get_host() const
+{
+	return (this->_host);
+}
+
+const std::string	&Server::get_root() const
+{
+	return (this->_root);
+}
+
+const std::string	&Server::get_maxSize() const
+{
+	return (this->_maxSize);
+}
+
+const std::string	&Server::get_serverName() const
+{
+	return (this->_serverName);
+}
+
+const std::string	&Server::get_errorPage() const
+{
+	return (this->_port);
 }
 
 void	Server::set_routes(Route* const routes, const uint nRoutes)
@@ -98,4 +133,20 @@ void	Server::set_serverName(const std::string &serverName)
 void	Server::set_errorPage(const std::string &errorPage)
 {
 	this->_errorPage = errorPage;
+}
+
+std::ostream	&operator<<(std::ostream &o, const Server &rhs)
+{
+	o << "server port: " << rhs.get_port() << '\n';
+	o << "server host: " << rhs.get_host() << '\n';
+	o << "server root: " << rhs.get_root() << '\n';
+	o << "server max_size: " << rhs.get_maxSize() << '\n';
+	o << "server server_name: " << rhs.get_serverName() << '\n';
+	o << "server error_page: " << rhs.get_errorPage() << '\n';
+	o << "server number of routes: " << rhs.get_nRoutes() << '\n';
+	for (uint i = 0; i < rhs.get_nRoutes(); i++)
+	{
+		std::cout << rhs.get_route(i);
+	}
+	return (o);
 }

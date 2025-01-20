@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/17 11:25:08 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:59:31 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,14 @@ public:
 
 	static uint	get_nServers();
 	
-	Route	&get_route(const uint nRoute) const;
+	uint				get_nRoutes() const;
+	Route				&get_route(const uint nRoute) const;
+	const std::string	&get_port() const;
+	const std::string	&get_host() const;
+	const std::string	&get_root() const;
+	const std::string	&get_maxSize() const;
+	const std::string	&get_serverName() const;
+	const std::string	&get_errorPage() const;
 	
 	void	set_routes(Route* const routes, const uint nRoutes);
 	void	set_port(const std::string &port);
@@ -61,7 +68,8 @@ public:
 	void	set_maxSize(const std::string &maxSize);
 	void	set_serverName(const std::string &serverName);
 	void	set_errorPage(const std::string &errorPage);
-
 };
+
+std::ostream	&operator<<(std::ostream &o, const Server &rhs);
 
 #endif

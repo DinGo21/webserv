@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:01:02 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/16 09:55:07 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:38:51 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Route	*Config::init_routes(uint i, uint nServer)
 	{
 		return (NULL);
 	}
-	this->_servers[nServer].set_routes(routes, count);
+	this->servers[nServer].set_routes(routes, count);
 	return (routes);
 }
 
@@ -45,12 +45,12 @@ Server	*Config::init_servers(uint i, uint count)
 		i++;
 	if (i >= this->_tokens.size())
 	{
-		this->_servers = new Server[count];
-		if (!this->_servers)
+		this->servers = new Server[count];
+		if (!this->servers)
 		{
 			return (NULL);
 		}
-		return (this->_servers);
+		return (this->servers);
 	}
 	if (this->_tokens[i] == "server")
 	{
@@ -59,7 +59,7 @@ Server	*Config::init_servers(uint i, uint count)
 	}
 	if (!init_routes(i + 1, count))
 		return (NULL);
-	return (this->_servers);
+	return (this->servers);
 }
 
 int	Config::init()

@@ -6,28 +6,53 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:24:24 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/17 12:05:29 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:39:06 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Config.hpp"
 
+uint	Config::parse_route(uint &i, uint routeCount, Route &route)
+{
+	uint	end = 0;
+
+	if (strchr("{};", this->_tokens[++i][0]))
+	{
+		std::cerr << "Expected a route path" << std::endl;
+		return (0);
+	}
+	route.set_path(this->_tokens[i]);
+	end = this->declaration_is_closed(++i);
+	if (end == 0)
+		return (0);
+	while (++i < end)
+	{
+		if (!Config::is_route_parameter(this->_tokens[i]))
+		{
+			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
+			return (0);
+		}
+		if (this->set_route(i, route) < 0)
+			return (0);
+	}
+	return (routeCount + 1);
+}
+
 uint	Config::parse_server(uint &i, uint count)
 {
-	uint	end = declaration_is_closed(++i);
+	uint	end = this->declaration_is_closed(++i);
 	uint	routeCount = 0;
 
 	if (end == 0)
 		return (0);
-	while (++i < end - 1)
+	while (++i < end)
 	{
-		std::cout << this->_tokens[i] << std::endl;
 		if (!Config::is_server_parameter(this->_tokens[i]))
 		{
 			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
 			return (0);
 		}
-		if (this->server_set(i, routeCount, this->_servers[count]) < 0)
+		if (this->set_server(i, routeCount, this->servers[count]) < 0)
 			return (0);
 	}
 	return (count + 1);
@@ -47,13 +72,16 @@ int	Config::parse()
 			std::cerr << this->_tokens[i] << " is not valid" << std::endl;
 			return (-1);
 		}
-
 		count = this->parse_server(i, count);
 		if (count == 0)
 		{
 			return (-1);
 		}
 		i++;
+	}
+	for (i = 0; i < Server::get_nServers(); i++)
+	{
+		std::cout << this->servers[i] << std::endl;
 	}
 	return (0);
 }

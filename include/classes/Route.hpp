@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2025/01/20 10:14:30 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:01:11 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ public:
 	const std::string	&get_redir() const;
 	bool				get_autoindex() const;
 	bool				method_isset(const e_method) const;
-
 
 	void	set_path(const std::string &path);
 	void	set_root(const std::string &root);

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/20 10:59:31 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:25:24 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ private:
 
 	uint		_nRoutes;
 	Route		*_routes;
-	std::string	_port;
+	uint		_port;
 	std::string	_host;
 	std::string	_root;
 	std::string	_maxSize;
@@ -54,7 +54,7 @@ public:
 	
 	uint				get_nRoutes() const;
 	Route				&get_route(const uint nRoute) const;
-	const std::string	&get_port() const;
+	uint 				get_port() const;
 	const std::string	&get_host() const;
 	const std::string	&get_root() const;
 	const std::string	&get_maxSize() const;
@@ -62,7 +62,7 @@ public:
 	const std::string	&get_errorPage() const;
 	
 	void	set_routes(Route* const routes, const uint nRoutes);
-	void	set_port(const std::string &port);
+	void	set_port(const uint port);
 	void	set_host(const std::string &host);
 	void	set_root(const std::string &root);
 	void	set_maxSize(const std::string &maxSize);

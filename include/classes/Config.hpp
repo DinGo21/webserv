@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:57:37 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/20 11:38:35 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:12:47 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ private:
 	int		set_server(uint &i, uint &routeCount, Server &server);
 	int		set_route(uint &i, Route &route);
 	int		set_server_string(uint &i, Server &server, void (Server::*set)(const std::string &));
+	int		set_server_port(uint &i, Server &server);
 	int		set_route_string(uint &i, Route &route, void (Route::*set)(const std::string &));
 	int		set_route_methods(uint &i, Route &route);
 	int		set_route_autoindex(uint &i, Route &route);

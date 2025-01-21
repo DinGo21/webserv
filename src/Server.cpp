@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/01/20 10:29:23 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:05:27 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ Route	&Server::get_route(const uint nRoute) const
 	return (this->_routes[nRoute]);
 }
 
-const std::string	&Server::get_port() const
+uint	Server::get_port() const
 {
 	return (this->_port);
 }
@@ -80,7 +80,7 @@ const std::string	&Server::get_serverName() const
 
 const std::string	&Server::get_errorPage() const
 {
-	return (this->_port);
+	return (this->_errorPage);
 }
 
 void	Server::set_routes(Route* const routes, const uint nRoutes)
@@ -89,15 +89,11 @@ void	Server::set_routes(Route* const routes, const uint nRoutes)
 	this->_nRoutes = nRoutes;
 }
 
-void	Server::set_port(const std::string &port)
+void	Server::set_port(const uint port)
 {
-	uint	i = 0;
-
-	while (port[i] != '\0')
+	if (port > __UINT16_MAX__)
 	{
-		if (!isdigit(port[i]))
-			throw (Server::InvalidFormatException());
-		i++;
+		throw (Server::InvalidFormatException());
 	}
 	this->_port = port;
 }

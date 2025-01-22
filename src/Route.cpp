@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Route.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 17:44:49 by diego             #+#    #+#             */
-/*   Updated: 2025/01/20 10:52:39 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:57:20 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 uint	Route::is_method(const std::string &str)
 {
-	if (str != "GET" && str != "POST")
+	if (str != "GET" && str != "POST" && str != "DELETE")
 	{
 		return (0);
 	}

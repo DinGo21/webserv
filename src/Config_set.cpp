@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config_set.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:53:47 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/21 12:06:51 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:57:49 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ int	Config::set_route_methods(uint &i, Route &route)
 		if (this->_tokens[i] == "POST")
 		{
 			route.set_method(Route::POST);
+		}
+		if (this->_tokens[i] == "DELETE")
+		{
+			route.set_method(Route::DELETE);
 		}
 		i++;
 	}

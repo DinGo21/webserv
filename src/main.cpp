@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/21 16:23:35 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:04:31 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ Server	*config_server(const char *path)
 
 void	init_connection(Server *servers)
 {
-	int					server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	int					on = 1;
+	int					server_fd;
 	int					nb = 0;
 	int					new_socket = 0;
 	struct sockaddr_in	addr;
@@ -50,9 +51,20 @@ void	init_connection(Server *servers)
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(port);
+	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd < 0)
 	{
 		std::cerr << "Cannot create socket" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+	{
+		std::cerr << "cannot create set socket to be reusable" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	if (fcntl(server_fd, F_SETFL, O_NONBLOCK) < 0)
+	{
+		std::cerr << strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
@@ -70,7 +82,7 @@ void	init_connection(Server *servers)
 		new_socket = accept(server_fd, (struct sockaddr *)&addr, (socklen_t *)&addrlen);
 		if (new_socket < 0)
 		{
-			std::cerr << "Failed to accept connection" << std::endl;
+			std::cerr << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);        
 		}
 		nb = read(new_socket, buff, 3000);
@@ -78,6 +90,14 @@ void	init_connection(Server *servers)
 		std::cout << buff;
 		write(new_socket, hello, strlen(hello));
 		close(new_socket);
+	}
+}
+
+void	run_server(Server *server)
+{
+	if (server->socket_create() < 0)
+	{
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -91,7 +111,7 @@ int	main(int argc, char *argv[])
 		return 1;
 	}
 	servers = config_server(argv[1]);
-	init_connection(servers);
+	run_server(servers);
 	delete [] servers;
 	return 0;
 }

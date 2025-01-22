@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Route.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2025/01/20 12:01:11 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:56:58 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ protected:
 	std::string	_index;
 	std::string	_root;
 	std::string	_redir;
-	bool		_methods[2];
+	bool		_methods[3];
 	bool		_autoindex;
 
 public:
@@ -36,7 +36,8 @@ public:
 	enum e_method
 	{
 		GET,
-		POST
+		POST,
+		DELETE
 	};
 
 	static uint	is_method(const std::string &str);

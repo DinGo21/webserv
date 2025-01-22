@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/21 12:25:24 by disantam         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:47:43 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <vector>
 # include <cstdlib>
 # include <stdexcept>
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
 # include "classes/Route.hpp"
 
 class Server
@@ -35,6 +39,8 @@ private:
 	std::string	_errorPage;
 
 public:
+	int	server_sock;
+
 	Server();
 	~Server();
 
@@ -50,8 +56,9 @@ public:
 		virtual const char	*what() const throw();
 	};
 
-	static uint	get_nServers();
-	
+	int	socket_create();
+
+	static uint			get_nServers();
 	uint				get_nRoutes() const;
 	Route				&get_route(const uint nRoute) const;
 	uint 				get_port() const;

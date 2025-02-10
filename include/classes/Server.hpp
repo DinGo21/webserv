@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/22 15:47:43 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:59:36 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,24 @@
 # include <stdexcept>
 # include <unistd.h>
 # include <fcntl.h>
+# include <errno.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include "classes/Route.hpp"
+
+typedef struct socket_s
+{
+	int					on;
+	int					serverSock;
+	int					maxSock;
+	int					ready;
+	int					newSock;
+	fd_set				masterSet;
+	fd_set				workingSet;
+	struct timeval		timeout;
+	struct sockaddr_in	addr;
+	socklen_t			addrlen;
+}					socket_t;
 
 class Server
 {
@@ -38,12 +53,10 @@ private:
 	std::string	_serverName;
 	std::string	_errorPage;
 
+	int	register_connections(socket_t &data);
+	int	register_requests(socket_t &data, int &i, int &flag);
+
 public:
-	int	server_sock;
-
-	Server();
-	~Server();
-
 	class InvalidFormatException: public std::exception
 	{
 	public:
@@ -56,7 +69,14 @@ public:
 		virtual const char	*what() const throw();
 	};
 
-	int	socket_create();
+	Server();
+	~Server();
+
+	void	init(socket_t &data);
+	int		run(socket_t &sockData);
+	int		register_event(socket_t &data);
+	int		socket_create(socket_t &data);
+	void	socket_close(socket_t &data, int sock);
 
 	static uint			get_nServers();
 	uint				get_nRoutes() const;
@@ -76,6 +96,8 @@ public:
 	void	set_serverName(const std::string &serverName);
 	void	set_errorPage(const std::string &errorPage);
 };
+
+
 
 std::ostream	&operator<<(std::ostream &o, const Server &rhs);
 

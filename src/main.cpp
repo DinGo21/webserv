@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/22 16:04:31 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:54:56 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
-
-Server	*config_server(const char *path)
-{
-	Config	config;
-
-	if (config.set_file(path) < 0)
-	{
-		return (NULL);
-	}
-	config.read_file();
-	if (config.init() < 0)
-	{
-		delete [] config.servers;
-		return (NULL);
-	}
-	if (config.parse() < 0)
-	{
-		delete [] config.servers;
-		return (NULL);
-	}
-	return config.servers;
-}
 
 void	init_connection(Server *servers)
 {
@@ -95,10 +73,31 @@ void	init_connection(Server *servers)
 
 void	run_server(Server *server)
 {
-	if (server->socket_create() < 0)
+	socket_t	data;
+
+	server->init(data);
+	if (server->socket_create(data) < 0 || server->run(data) < 0)
 	{
+		delete [] server;
 		exit(EXIT_FAILURE);
 	}
+}
+
+Server	*run_config(const char *path)
+{
+	Config	config;
+
+	if (config.set_file(path) < 0)
+	{
+		return (NULL);
+	}
+	config.read_file();
+	if (config.init() < 0 || config.parse() < 0)
+	{
+		delete [] config.servers;
+		return (NULL);
+	}
+	return config.servers;
 }
 
 int	main(int argc, char *argv[])
@@ -110,7 +109,7 @@ int	main(int argc, char *argv[])
 		std::cerr << "No arguments passed, using default configuration file" << std::endl;
 		return 1;
 	}
-	servers = config_server(argv[1]);
+	servers = run_config(argv[1]);
 	run_server(servers);
 	delete [] servers;
 	return 0;

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:24:24 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/20 11:39:06 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/14 12:07:11 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,6 @@ int	Config::parse()
 			return (-1);
 		}
 		i++;
-	}
-	for (i = 0; i < Server::get_nServers(); i++)
-	{
-		std::cout << this->servers[i] << std::endl;
 	}
 	return (0);
 }

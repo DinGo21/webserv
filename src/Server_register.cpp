@@ -6,29 +6,22 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:02:20 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/10 17:30:38 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:46:20 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Server.hpp"
 
-int	Server::register_requests(socket_t &data, int &i, int &flag)
+int	Server::register_request(socket_t &data, int &i, int &flag)
 {
-	int 	nb;
-	char	*buff[3000];
+	Request		request;
+	std::string	response;
 
 	(void)data;
-	nb = recv(i, buff, 3000, 0);
-	if (nb < 0)
-	{
-		std::cerr << strerror(errno) << std::endl;
-		return (-1);
-	}
-	if (nb == 0)
-		return (0);
-	buff[nb] = '\0';
-	std::cout << buff;
-	if (send(i, buff, nb, 0) < 0)
+	request = this->request_read(i);
+	this->response_make(request, response);
+	std::cout << response;
+	if (send(i, response.c_str(), response.size(), MSG_DONTWAIT) < 0)
 	{
 		std::cerr << strerror(errno) << std::endl;
 		return (-1);
@@ -37,22 +30,24 @@ int	Server::register_requests(socket_t &data, int &i, int &flag)
 	return (0);
 }
 
-int	Server::register_connections(socket_t &data)
+int	Server::register_connection(socket_t &data)
 {
+	int	newSock;
+
 	while (true)
 	{
-		data.newSock = accept(data.serverSock, NULL, NULL);
-		if (data.newSock < 0 && errno != EWOULDBLOCK)
+		newSock = accept(data.serverSock, NULL, NULL);
+		if (newSock < 0 && errno != EWOULDBLOCK)
 		{
 			std::cerr << strerror(errno) << std::endl;
 			return (-1);
 		}
-		if (data.newSock < 0)
+		if (newSock < 0)
 			break;
-		FD_SET(data.newSock, &data.masterSet);
-		if (data.newSock > data.maxSock)
+		FD_SET(newSock, &data.masterSet);
+		if (newSock > data.maxSock)
 		{
-			data.maxSock = data.newSock;
+			data.maxSock = newSock;
 		}
 	}
 	return (0);
@@ -60,8 +55,8 @@ int	Server::register_connections(socket_t &data)
 
 int	Server::register_event(socket_t &data)
 {
-	int				i;
-	int				flag;
+	int	i;
+	int	flag;
 
 	for (i = 0; i <= data.maxSock && data.ready > 0; i++)
 	{
@@ -71,9 +66,9 @@ int	Server::register_event(socket_t &data)
 		if (i > data.maxSock)
 			break;
 		data.ready -= 1;
-		if (i == data.serverSock && this->register_connections(data) < 0)
+		if (i == data.serverSock && this->register_connection(data) < 0)
 			return (-1);
-		if (i != data.serverSock && this->register_requests(data, i, flag) < 0)
+		if (i != data.serverSock && this->register_request(data, i, flag) < 0)
 			return (-1);
 		if (flag)
 		{

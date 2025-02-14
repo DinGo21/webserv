@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/10 16:59:36 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:48:11 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define __SERVER_H__
 
 # include <iostream>
+# include <fstream>
 # include <string>
 # include <vector>
 # include <cstdlib>
@@ -24,6 +25,7 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include "classes/Route.hpp"
+# include "classes/Request.hpp"
 
 typedef struct socket_s
 {
@@ -31,7 +33,6 @@ typedef struct socket_s
 	int					serverSock;
 	int					maxSock;
 	int					ready;
-	int					newSock;
 	fd_set				masterSet;
 	fd_set				workingSet;
 	struct timeval		timeout;
@@ -53,8 +54,11 @@ private:
 	std::string	_serverName;
 	std::string	_errorPage;
 
-	int	register_connections(socket_t &data);
-	int	register_requests(socket_t &data, int &i, int &flag);
+	int		register_connection(socket_t &data);
+	int		register_request(socket_t &data, int &i, int &flag);
+	Request	request_read(int fd);
+	int		request_check(const Request &request);
+	void	response_make(const Request &request, std::string &response);
 
 public:
 	class InvalidFormatException: public std::exception
@@ -73,6 +77,7 @@ public:
 	~Server();
 
 	void	init(socket_t &data);
+	int		set_dir();
 	int		run(socket_t &sockData);
 	int		register_event(socket_t &data);
 	int		socket_create(socket_t &data);

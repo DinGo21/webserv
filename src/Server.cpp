@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/02/06 08:17:21 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/14 13:15:36 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,56 @@ const char	*Server::InvalidFormatException::what() const throw()
 const char	*Server::OutOfBoundsException::what() const throw()
 {
 	return "Trying to access out of bounds";
+}
+
+int	Server::run(socket_t &data)
+{
+	FD_ZERO(&data.masterSet);
+	FD_SET(data.serverSock, &data.masterSet);
+	while (true)
+	{
+		memcpy(&data.workingSet, &data.masterSet, sizeof(data.masterSet));
+		data.timeout.tv_sec = 1 * 60;
+		data.timeout.tv_usec = 0;
+		data.ready = select(data.maxSock + 1, &data.workingSet, NULL, NULL, &data.timeout);
+		if (data.ready < 0)
+		{
+			std::cerr << strerror(errno) << std::endl;
+			return (-1);
+		}
+		if (data.ready == 0)
+			break;
+		if (this->register_event(data) < 0)
+			return (-1);
+	}
+	for (int i = 0; i < data.maxSock; i++)
+	{
+		if (FD_ISSET(i, &data.masterSet))
+			close(i);
+	}
+	return (0);
+}
+
+int	Server::set_dir()
+{
+	char	buf[500];
+
+	if (chdir(this->_root.c_str()) < 0)
+	{
+		std::cerr << strerror(errno) << std::endl;
+		return (-1);
+	}
+	std::cout << getcwd(buf, 500) << std::endl;
+	return (0);
+}
+
+void	Server::init(socket_t &sockData)
+{
+	memset(&sockData, 0, sizeof(sockData));
+	sockData.addr.sin_family = AF_INET;
+	sockData.addr.sin_port = htons(this->_port);
+	sockData.addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	sockData.addrlen = sizeof(sockData.addr);
 }
 
 uint	Server::get_nRoutes() const

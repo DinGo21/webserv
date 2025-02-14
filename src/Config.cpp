@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:28:32 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/20 11:44:18 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:02:40 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ int	Config::set_file(const char *path)
 
 int	Config::read_file()
 {
-	size_t						i = 0;
-	size_t						j = 0;
-	std::string					tmp;
-	std::string					raw;
+	size_t		i = 0;
+	size_t		j = 0;
+	std::string	tmp;
+	std::string	raw;
 
 	while (std::getline(this->_file, tmp))
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Route.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2025/01/22 08:56:58 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:33:56 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,16 @@
 # include <cstdlib>
 # include <cstring>
 
+enum e_method
+{
+	GET,
+	POST,
+	DELETE
+};
+
 class Route
 {
-protected:
+private:
 	std::string	_path;
 	std::string	_index;
 	std::string	_root;
@@ -32,15 +39,6 @@ protected:
 public:
 	Route();
 	~Route();
-
-	enum e_method
-	{
-		GET,
-		POST,
-		DELETE
-	};
-
-	static uint	is_method(const std::string &str);
 
 	const std::string	&get_path() const;
 	const std::string	&get_index() const;

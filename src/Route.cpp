@@ -3,23 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Route.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 17:44:49 by diego             #+#    #+#             */
-/*   Updated: 2025/01/22 08:57:20 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:57:21 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Route.hpp"
-
-uint	Route::is_method(const std::string &str)
-{
-	if (str != "GET" && str != "POST" && str != "DELETE")
-	{
-		return (0);
-	}
-	return (1);
-}
 
 Route::Route(): _path(), _index(), _root(), _redir(), _methods(), _autoindex() {}
 
@@ -92,7 +83,7 @@ std::ostream	&operator<<(std::ostream &o, const Route &rhs)
 	o << "route root: " << rhs.get_root() << '\n';
 	o << "route redir: " << rhs.get_redir() << '\n';
 	o << "route autoindex: " << rhs.get_autoindex() << '\n';
-	o << "route method GET: " << rhs.method_isset(Route::GET) << '\n';
-	o << "route method POST: " << rhs.method_isset(Route::POST) << '\n';
+	o << "route method GET: " << rhs.method_isset(GET) << '\n';
+	o << "route method POST: " << rhs.method_isset(POST) << '\n';
 	return (o);
 }

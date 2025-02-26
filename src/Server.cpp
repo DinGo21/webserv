@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/02/14 13:15:36 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/26 12:14:43 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	Server::run(socket_t &data)
 		if (data.ready == 0)
 			break;
 		if (this->register_event(data) < 0)
-			return (-1);
+			break;
 	}
 	for (int i = 0; i < data.maxSock; i++)
 	{

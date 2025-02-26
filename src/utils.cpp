@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/11 17:24:17 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/25 08:58:24 by disantam         ###   ########.fr       */
+/*   Created: 2025/02/25 08:47:34 by disantam          #+#    #+#             */
+/*   Updated: 2025/02/25 08:51:27 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __WEBSERV_H__
-# define __WEBSERV_H__
+#include "utils.hpp"
 
-# include <iostream>
-# include <fstream>
-# include <cstdlib>
-# include <cstring>
-# include <unistd.h>
-# include <fcntl.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include "utils.hpp"
-# include "classes/Config.hpp"
-# include "classes/Route.hpp"
-# include "classes/Server.hpp"
-
-#endif
+bool	is_method(const std::string &str)
+{
+	if (str != "GET" && str != "POST" && str != "DELETE")
+	{
+		return (0);
+	}
+	return (1);
+}

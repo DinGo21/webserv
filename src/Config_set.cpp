@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Config_set.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: disantam <disantam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:53:47 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/22 08:57:49 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:57:55 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Config.hpp"
+#include "utils.hpp"
 
 int	Config::set_route_autoindex(uint &i, Route &route)
 {
@@ -36,19 +37,19 @@ int	Config::set_route_methods(uint &i, Route &route)
 	{
 		return (-1);
 	}
-	while (Route::is_method(this->_tokens[i]) && this->_tokens[i][0] != ';')
+	while (is_method(this->_tokens[i]) && this->_tokens[i][0] != ';')
 	{
 		if (this->_tokens[i] == "GET")
 		{
-			route.set_method(Route::GET);
+			route.set_method(GET);
 		}
 		if (this->_tokens[i] == "POST")
 		{
-			route.set_method(Route::POST);
+			route.set_method(POST);
 		}
 		if (this->_tokens[i] == "DELETE")
 		{
-			route.set_method(Route::DELETE);
+			route.set_method(DELETE);
 		}
 		i++;
 	}

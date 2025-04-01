@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:01:02 by disantam          #+#    #+#             */
-/*   Updated: 2025/01/20 11:38:51 by disantam         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:50:14 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Route	*Config::init_routes(uint i, uint nServer)
 {
-	uint	end = declaration_is_closed(i++);
+	uint	end = this->context_is_closed(i++);
 	uint	count = 0;
 	Route	*routes = NULL;
 
@@ -55,7 +55,7 @@ Server	*Config::init_servers(uint i, uint count)
 	if (this->_tokens[i] == "server")
 	{
 		if (!this->init_servers(i + 1, count + 1))
-			return NULL;
+			return (NULL);
 	}
 	if (!init_routes(i + 1, count))
 		return (NULL);
@@ -66,12 +66,12 @@ int	Config::init()
 {
 	if (!this->init_servers(0, 0))
 	{
-		std::cerr << "memory allocation error" << std::endl;
+		std::cerr << "Memory allocation error" << std::endl;
 		return (-1);
 	}
 	if (Server::get_nServers() == 0)
 	{
-		std::cerr << "Could not configure any server" << std::endl;
+		std::cerr << "Empty configuration file" << std::endl;
 		return (-1);
 	}
 	return (0);

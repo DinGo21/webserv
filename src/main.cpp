@@ -6,53 +6,59 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 12:56:34 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/14 13:16:26 by disantam         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:37:07 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserv.hpp"
 
-void	run_server(Server *server)
-{
-	socket_t	data;
-
-	server->init(data);
-	if (server->set_dir() < 0 || server->socket_create(data) < 0 ||
-		server->run(data) < 0)
-	{
-		delete [] server;
-		exit(EXIT_FAILURE);
-	}
-}
-
-Server	*run_config(const char *path)
+int	run_config(const char *path, Server **servers)
 {
 	Config	config;
 
 	if (config.set_file(path) < 0)
 	{
-		return (NULL);
+		return (-1);
 	}
 	config.read_file();
-	if (config.init() < 0 || config.parse() < 0)
+	if (config.init() < 0 || config.parse() < 0 || config.check() < 0)
 	{
-		delete [] config.servers;
-		return (NULL);
+		return (-1);
 	}
-	return config.servers;
+	for (uint i = 0; i < Server::get_nServers(); i++)
+	{
+		std::cout << config.servers[i] << std::endl;
+	}
+	*servers = config.servers;
+	return 0;
+}
+
+int	run_monitor(Server *servers)
+{
+	Monitor	monitor(servers);
+
+	if (monitor.sockets_init() < 0)
+	{
+		return (-1);
+	}
+	if (monitor.run() < 0)
+	{
+		return (-1);
+	}
+	return (0);
 }
 
 int	main(int argc, char *argv[])
 {
-	Server	*servers;
+	Server	*servers = NULL;
 
 	if (argc != 2)
 	{
-		std::cerr << "No arguments passed, using default configuration file" << std::endl;
+		std::cerr << "Server requires configuration file" << std::endl;
 		return 1;
 	}
-	servers = run_config(argv[1]);
-	run_server(servers);
+	run_config(argv[1], &servers);
+	run_monitor(servers);
 	delete [] servers;
-	return 0;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 09:24:24 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/14 12:07:11 by disantam         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:55:08 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ uint	Config::parse_route(uint &i, uint routeCount, Route &route)
 		return (0);
 	}
 	route.set_path(this->_tokens[i]);
-	end = this->declaration_is_closed(++i);
+	end = this->context_is_closed(++i);
 	if (end == 0)
 		return (0);
 	while (++i < end)
 	{
-		if (!Config::is_route_parameter(this->_tokens[i]))
+		if (!Config::is_route_directive(this->_tokens[i]))
 		{
-			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
+			std::cerr << "Unknown directive: '" << this->_tokens[i] << '\'' << std::endl;
 			return (0);
 		}
 		if (this->set_route(i, route) < 0)
@@ -40,16 +40,16 @@ uint	Config::parse_route(uint &i, uint routeCount, Route &route)
 
 uint	Config::parse_server(uint &i, uint count)
 {
-	uint	end = this->declaration_is_closed(++i);
+	uint	end = this->context_is_closed(++i);
 	uint	routeCount = 0;
 
 	if (end == 0)
 		return (0);
 	while (++i < end)
 	{
-		if (!Config::is_server_parameter(this->_tokens[i]))
+		if (!Config::is_server_directive(this->_tokens[i]))
 		{
-			std::cerr << "Unknown parameter: " << this->_tokens[i] << std::endl;
+			std::cerr << "Unknown directive: '" << this->_tokens[i] << '\'' << std::endl;
 			return (0);
 		}
 		if (this->set_server(i, routeCount, this->servers[count]) < 0)
@@ -69,7 +69,7 @@ int	Config::parse()
 			i++;
 		if (this->_tokens[i] != "server")
 		{
-			std::cerr << this->_tokens[i] << " is not valid" << std::endl;
+			std::cerr << "Invalid block directive: '" << this->_tokens[i] << '\'' << std::endl;
 			return (-1);
 		}
 		count = this->parse_server(i, count);

@@ -6,15 +6,15 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:28:32 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/13 14:02:40 by disantam         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:49:48 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Config.hpp"
 
-uint	Config::is_server_parameter(const std::string &str)
+uint	Config::is_server_directive(const std::string &str)
 {
-	if (str != "port" && str != "host" && str != "root" && str != "max_size" &&
+	if (str != "listen" && str != "root" && str != "max_size" &&
 		str != "server_name" && str != "error_page" && str != "route")
 	{
 		return (0);
@@ -22,7 +22,7 @@ uint	Config::is_server_parameter(const std::string &str)
 	return (1);
 }
 
-uint	Config::is_route_parameter(const std::string &str)
+uint	Config::is_route_directive(const std::string &str)
 {
 	if (str != "index" && str != "root" && str != "autoindex" && str != "methods" &&
 		str != "redir")
@@ -81,7 +81,7 @@ int	Config::read_file()
 	return (0);
 }
 
-uint	Config::declaration_is_closed(uint i)
+uint	Config::context_is_closed(uint i)
 {
 	uint	f = 1;
 

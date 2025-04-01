@@ -6,18 +6,18 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:53:47 by disantam          #+#    #+#             */
-/*   Updated: 2025/02/25 08:57:55 by disantam         ###   ########.fr       */
+/*   Updated: 2025/03/14 16:50:07 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "classes/Config.hpp"
-#include "utils.hpp"
 
 int	Config::set_route_autoindex(uint &i, Route &route)
 {
 	if (strchr("{};", this->_tokens[++i][0]) && this->_tokens[i] != "ON" &&
 		this->_tokens[i] != "OFF")
 	{
+		std::cerr << "Invalid token: '" << this->_tokens[i] << '\'' << std::endl;
 		return (-1);
 	}
 	if (this->_tokens[i] == "ON")
@@ -26,6 +26,7 @@ int	Config::set_route_autoindex(uint &i, Route &route)
 	}
 	if (this->_tokens[++i][0] != ';')
 	{
+		std::cerr << "Unexpected token: " << this->_tokens[i] << "', expected ';'" << std::endl;
 		return (-1);
 	}
 	return (0);
@@ -35,6 +36,7 @@ int	Config::set_route_methods(uint &i, Route &route)
 {
 	if (strchr("{};", this->_tokens[++i][0]))
 	{
+		std::cerr << "Invalid token: '" << this->_tokens[i] << '\'' << std::endl;
 		return (-1);
 	}
 	while (is_method(this->_tokens[i]) && this->_tokens[i][0] != ';')
@@ -55,6 +57,7 @@ int	Config::set_route_methods(uint &i, Route &route)
 	}
 	if (this->_tokens[i][0] != ';')
 	{
+		std::cerr << "Unexpected token: " << this->_tokens[i] << "', expected ';'" << std::endl;
 		return (-1);
 	}
 	return (0);
@@ -64,6 +67,7 @@ int	Config::set_route_string(uint &i, Route &route, void (Route::*set)(const std
 {
 	if (strchr("{};", this->_tokens[++i][0]))
 	{
+		std::cerr << "Invalid token: '" << this->_tokens[i] << '\'' << std::endl;
 		return (-1);
 	}
 	try
@@ -77,6 +81,7 @@ int	Config::set_route_string(uint &i, Route &route, void (Route::*set)(const std
 	}
 	if (this->_tokens[++i][0] != ';')
 	{
+		std::cerr << "Unexpected token: " << this->_tokens[i] << "', expected ';'" << std::endl;
 		return (-1);
 	}
 	return (0);
@@ -111,6 +116,7 @@ int	Config::set_server_string(uint &i, Server &server, void (Server::*set)(const
 {
 	if (strchr("{};", this->_tokens[++i][0]))
 	{
+		std::cerr << "Invalid token: '" << this->_tokens[i] << '\'' << std::endl;
 		return (-1);
 	}
 	try
@@ -124,25 +130,34 @@ int	Config::set_server_string(uint &i, Server &server, void (Server::*set)(const
 	}
 	if (this->_tokens[++i][0] != ';')
 	{
+		std::cerr << "Unexpected token: " << this->_tokens[i] << "', expected ';'" << std::endl;
 		return (-1);
 	}
 	return (0);
 }
 
-int	Config::set_server_port(uint &i, Server &server)
+int	Config::set_server_listen(uint &i, Server &server)
 {
+	uint	pos;
+
 	if (strchr("{};", this->_tokens[++i][0]))
 	{
+		std::cerr << "Invalid token: '" << this->_tokens[i] << '\'' << std::endl;
 		return (-1);
 	}
-	for (uint j = 0; this->_tokens[i][j] != '\0'; j++)
-	{
-		if (!isdigit(this->_tokens[i][j]))
-			return (-1);
-	}
+	pos = this->_tokens[i].find(':');
 	try
 	{
-		server.set_port(atoi(this->_tokens[i].c_str()));
+		if (pos == std::string::npos)
+		{
+			server.set_port(this->_tokens[i]);
+			server.set_host("127.0.0.1");
+		}
+		else
+		{
+			server.set_host(this->_tokens[i].substr(0, pos));
+			server.set_port(this->_tokens[i].substr(pos + 1, this->_tokens[i].size() - pos));
+		}
 	}
 	catch(const std::exception& e)
 	{
@@ -151,6 +166,7 @@ int	Config::set_server_port(uint &i, Server &server)
 	}
 	if (this->_tokens[++i][0] != ';')
 	{
+		std::cerr << "Unexpected token: " << this->_tokens[i] << "', expected ';'" << std::endl;
 		return (-1);
 	}
 	return (0);
@@ -158,13 +174,9 @@ int	Config::set_server_port(uint &i, Server &server)
 
 int	Config::set_server(uint &i, uint &routeCount, Server &server)
 {
-	if (this->_tokens[i] == "port")
+	if (this->_tokens[i] == "listen")
 	{
-		return this->set_server_port(i, server);
-	}
-	if (this->_tokens[i] == "host")
-	{
-		return this->set_server_string(i, server, &Server::set_host);
+		return this->set_server_listen(i, server);
 	}
 	if (this->_tokens[i] == "root")
 	{

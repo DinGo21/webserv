@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 13:42:17 by diego             #+#    #+#             */
-/*   Updated: 2025/02/25 09:33:56 by disantam         ###   ########.fr       */
+/*   Updated: 2025/02/27 12:54:05 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,5 @@ public:
 };
 
 std::ostream	&operator<<(std::ostream &o, const Route &rhs);
-
 
 #endif

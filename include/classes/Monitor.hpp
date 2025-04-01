@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:53:22 by disantam          #+#    #+#             */
-/*   Updated: 2025/04/01 16:09:31 by disantam         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:30:46 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ typedef struct listen_s
 class Monitor
 {
 private:
-	Server				*servers;
-	std::list<listen_t>	listenSocks;
-	int					socksReady;
-	int					maxSock;
-	fd_set				masterSet;
-	fd_set				workingSet;
-	struct timeval		timeout;
+	Server				*_servers;
+	std::list<listen_t>	_listenSocks;
+	int					_socksReady;
+	int					_maxSock;
+	fd_set				_masterSet;
+	fd_set				_workingSet;
+	struct timeval		_timeout;
 	
 	void	sockets_set();
 	void	sockets_clean();

@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:31:22 by disantam          #+#    #+#             */
-/*   Updated: 2025/04/01 16:07:05 by disantam         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:35:58 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ int	Monitor::register_event()
 {
 	int	flag;
 
-	for (int i = 0; i <= this->maxSock && this->socksReady > 0; i++)
+	for (int i = 0; i <= this->_maxSock && this->_socksReady > 0; i++)
 	{
 		flag = 0;
-		while (i <= this->maxSock && !FD_ISSET(i, &this->masterSet))
+		while (i <= this->_maxSock && !FD_ISSET(i, &this->_masterSet))
 			i++;
-		if (i > this->maxSock)
+		if (i > this->_maxSock)
 		{
 			std::cout << i << std::endl;
 			break;
@@ -54,11 +54,11 @@ int	Monitor::register_connection(const int listenSock)
 		}
 		if (newSock < 0)
 			break;
-		FD_SET(newSock, &this->masterSet);
-		if (newSock > this->maxSock)
-			this->maxSock = newSock;
+		FD_SET(newSock, &this->_masterSet);
+		if (newSock > this->_maxSock)
+			this->_maxSock = newSock;
 		if (!flag)
-			this->socksReady--;
+			this->_socksReady--;
 		flag = 1;
 	}
 	return (0);
@@ -81,6 +81,6 @@ int	Monitor::register_request(const int sock, int &flag)
 	}
 	send(sock, req.c_str(), req.size(), MSG_DONTWAIT);
 	flag = 1;
-	this->socksReady--;
+	this->_socksReady--;
 	return (0);
 }

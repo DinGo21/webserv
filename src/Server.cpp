@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 12:46:54 by diego             #+#    #+#             */
-/*   Updated: 2025/03/14 16:52:09 by disantam         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:30:20 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,11 @@ uint	Server::get_nServers()
 	return Server::_nServers;
 }
 
-Server::Server(): _nRoutes(0), _routes(NULL), _default(), _port(), _host(), _root(), _maxSize(), _serverName(), _errorPage()
+Server::Server()
 {
+	this->_nRoutes = 0;
+	this->_default = 0;
+	this->_routes = NULL;
 	Server::_nServers++;
 }
 
@@ -166,53 +169,3 @@ std::ostream	&operator<<(std::ostream &o, const Server &rhs)
 	}
 	return (o);
 }
-
-// int	Server::run(socket_t &data)
-// {
-// 	FD_ZERO(&data.masterSet);
-// 	FD_SET(data.serverSock, &data.masterSet);
-// 	while (true)
-// 	{
-// 		memcpy(&data.workingSet, &data.masterSet, sizeof(data.masterSet));
-// 		data.timeout.tv_sec = 1 * 60;
-// 		data.timeout.tv_usec = 0;
-// 		data.ready = select(data.maxSock + 1, &data.workingSet, NULL, NULL, &data.timeout);
-// 		if (data.ready < 0)
-// 		{
-// 			std::cerr << strerror(errno) << std::endl;
-// 			return (-1);
-// 		}
-// 		if (data.ready == 0)
-// 			break;
-// 		if (this->register_event(data) < 0)
-// 			break;
-// 	}
-// 	for (int i = 0; i < data.maxSock; i++)
-// 	{
-// 		if (FD_ISSET(i, &data.masterSet))
-// 			close(i);
-// 	}
-// 	return (0);
-// }
-
-// int	Server::set_dir()
-// {
-// 	char	buf[500];
-
-// 	if (chdir(this->_root.c_str()) < 0)
-// 	{
-// 		std::cerr << strerror(errno) << std::endl;
-// 		return (-1);
-// 	}
-// 	std::cout << getcwd(buf, 500) << std::endl;
-// 	return (0);
-// }
-
-// void	Server::init(socket_t &sockData)
-// {
-// 	memset(&sockData, 0, sizeof(sockData));
-// 	sockData.addr.sin_family = AF_INET;
-// 	sockData.addr.sin_port = htons(this->_port);
-// 	sockData.addr.sin_addr.s_addr = htonl(INADDR_ANY);
-// 	sockData.addrlen = sizeof(sockData.addr);
-// }

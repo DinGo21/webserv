@@ -6,7 +6,7 @@
 /*   By: disantam <disantam@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:09:19 by disantam          #+#    #+#             */
-/*   Updated: 2025/03/19 15:51:11 by disantam         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:23:54 by disantam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,6 @@ public:
 
 	Server();
 	~Server();
-
-	// void	init(socket_t &data);
-	// int		set_dir();
-	// int		run(socket_t &sockData);
-	// int		socket_create(socket_t &data);
-	// void	socket_close(socket_t &data, int sock);
-
 	
 	static uint			get_nServers();
 	uint				get_nRoutes() const;
